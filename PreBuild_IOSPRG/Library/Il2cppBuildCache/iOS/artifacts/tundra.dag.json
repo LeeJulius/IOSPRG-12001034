@@ -1,0 +1,160 @@
+{
+  "Nodes": [
+    {
+      "Annotation": "all_tundra_nodes",
+      "Action": "",
+      "Inputs": [],
+      "Outputs": [],
+      "TargetDirectories": [],
+      "PassIndex": 0,
+      "ToBuildDependencies": [
+        1,
+        2,
+        3
+      ],
+      "ToUseDependencies": [],
+      "OverwriteOutputs": true,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 0
+    },
+    {
+      "Annotation": "Il2Cpp F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/Data/Metadata/global-metadata.dat",
+      "Action": "\"D:\\Hub Unity\\2020.3.25f1\\Editor\\Data\\il2cpp/build/deploy/netcoreapp3.1/il2cpp.exe\" --convert-to-cpp --emit-null-checks --enable-array-bounds-check --dotnetprofile=\"unityaot\" --additional-cpp=F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/additionalCppFiles/UnityClassRegistration.cpp --additional-cpp=F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/additionalCppFiles/UnityICallRegistration.cpp --incremental-g-c-time-slice=3 --avoid-dynamic-library-copy --profiler-report --map-file-parser=\"D:/Hub Unity/2020.3.25f1/Editor/Data/Tools/MapFileParser/MapFileParser.exe\" --directory=F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed --generatedcppdir=F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput --stats-output-dir=F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppStats",
+      "Inputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/Mono.Security.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/mscorlib.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/System.Configuration.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/System.Core.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/System.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/System.Xml.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.AnimationModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.AudioModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.CoreModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.GameCenterModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.GridModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.IMGUIModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.InputLegacyModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.Physics2DModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.PhysicsModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.SharedInternalsModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.SpriteShapeModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.TextRenderingModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.TilemapModule.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.UI.dll",
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Temp/StagingArea/Data/Managed/UnityEngine.UIModule.dll",
+        "\"D:/Hub Unity/2020.3.25f1/Editor/Data/il2cpp/build/deploy/netcoreapp3.1/il2cpp.exe\""
+      ],
+      "Outputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/Data/Metadata/global-metadata.dat"
+      ],
+      "TargetDirectories": [],
+      "PassIndex": 0,
+      "ToBuildDependencies": [],
+      "ToUseDependencies": [],
+      "OverwriteOutputs": false,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 1
+    },
+    {
+      "Annotation": "Copy Additional C++ File F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/UnityClassRegistration.cpp",
+      "Action": "copy \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\additionalCppFiles\\UnityClassRegistration.cpp\" \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityClassRegistration.cpp\" && copy /b \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityClassRegistration.cpp\" +,, \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityClassRegistration.cpp\" ",
+      "Inputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/additionalCppFiles/UnityClassRegistration.cpp"
+      ],
+      "Outputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/UnityClassRegistration.cpp"
+      ],
+      "TargetDirectories": [],
+      "PassIndex": 0,
+      "ToBuildDependencies": [
+        1
+      ],
+      "ToUseDependencies": [
+        1
+      ],
+      "OverwriteOutputs": true,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 2
+    },
+    {
+      "Annotation": "Copy Additional C++ File F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/UnityICallRegistration.cpp",
+      "Action": "copy \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\additionalCppFiles\\UnityICallRegistration.cpp\" \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityICallRegistration.cpp\" && copy /b \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityICallRegistration.cpp\" +,, \"F:\\Subjects\\IOSPRG\\PreBuild_IOSPRG\\Library\\Il2cppBuildCache\\iOS\\il2cppOutput\\UnityICallRegistration.cpp\" ",
+      "Inputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/additionalCppFiles/UnityICallRegistration.cpp"
+      ],
+      "Outputs": [
+        "F:/Subjects/IOSPRG/PreBuild_IOSPRG/Library/Il2cppBuildCache/iOS/il2cppOutput/UnityICallRegistration.cpp"
+      ],
+      "TargetDirectories": [],
+      "PassIndex": 0,
+      "ToBuildDependencies": [
+        1
+      ],
+      "ToUseDependencies": [
+        1
+      ],
+      "OverwriteOutputs": true,
+      "FrontendResponseFiles": [],
+      "AllowUnexpectedOutput": true,
+      "AllowedOutputSubstrings": [],
+      "DebugActionIndex": 3
+    }
+  ],
+  "FileSignatures": [
+    {
+      "File": "../../../Temp/StagingArea/Data/Managed"
+    },
+    {
+      "File": "artifacts/buildprogram/tundra_buildprogram.dag.json"
+    },
+    {
+      "File": "il2cpp_settings.json"
+    },
+    {
+      "File": "unitylinker_settings.json"
+    }
+  ],
+  "GlobSignatures": [
+    {
+      "Path": "../../../Temp/StagingArea/Data/Managed"
+    }
+  ],
+  "ContentDigestExtensions": [
+    ".rsp",
+    ".dll",
+    ".exe",
+    ".txt",
+    ".c",
+    ".cpp",
+    ".h",
+    ".cs",
+    ".hpp"
+  ],
+  "StructuredLogFileName": "artifacts/tundra.log.json",
+  "StateFileName": "artifacts/TundraBuildState.state",
+  "StateFileNameTmp": "artifacts/TundraBuildState.state.tmp",
+  "ScanCacheFileName": "artifacts/tundra.scancache",
+  "ScanCacheFileNameTmp": "artifacts/tundra.scancache.tmp",
+  "DigestCacheFileName": "artifacts/tundra.digestcache",
+  "DigestCacheFileNameTmp": "artifacts/tundra.digestcache.tmp",
+  "DirectoriesCausingImplicitDependencies": [],
+        "NamedNodes": {
+          "all_tundra_nodes": 0
+        }
+,  "DefaultNodes": [
+    0
+  ],
+  "SharedResources": [],
+  "Scanners": [],
+  "Identifier": "artifacts/tundra.dag.json",
+  "BuildTitle": "Bee",
+  "RelativePathToRoot": ".."
+}
