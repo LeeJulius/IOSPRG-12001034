@@ -7,98 +7,64 @@ public class Enemy : MonoBehaviour
     public enum ArrowTypes
     {
         GREEN,
-        RED
+        RED,
+        YELLOW
     }
 
-    public enum CorrentSwipe
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
+    [Header("Arrow Sprites")]
+    [SerializeField]
+    private GameObject[] ArrowDirections;
 
-    private CorrentSwipe CorrectSwipe;
-
+    [Header("Enemy Properties")]
+    public float moveSpeed;
     public ArrowTypes ArrowType;
+    private int ArrowPosition;
+    private SwipeDirections CorrectSwipe;
 
-    [SerializeField]
-    private List<GameObject> ArrowDirections;
-
-    public GameObject Player;
-
-    [SerializeField]
-    private float moveSpeed;
-
+    [Header("Enemy Conditions")]
     private bool inPlayerRange;
+    private bool isAlive;
 
     // Start is called before the first frame update
     void Start()
     {
         inPlayerRange = false;
+        isAlive = true;
 
         // Setting Arrow Position
-        int ArrowPosition = Random.Range(0, ArrowDirections.Count);
+        ArrowPosition = Random.Range(0, ArrowDirections.Length);
         ArrowDirections[ArrowPosition].SetActive(true);
 
         // Setting Enemy Type
-        int EnemyType = Random.Range(1, 3);
+        int EnemyType = Random.Range(1, 4);
 
-        if (EnemyType == 1)
+        // Applying Enemy Characteristics
+        switch (EnemyType)
         {
-            ArrowType = ArrowTypes.GREEN;
-            ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.green;
+            case 1:
+                ArrowType = ArrowTypes.GREEN;
+                ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.green;
+                break;
 
-            switch (ArrowPosition)
-            {
-                case 0:
-                    CorrectSwipe = CorrentSwipe.UP;
-                    break;
+            case 2:
+                ArrowType = ArrowTypes.RED;
+                ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.red;
+                break;
 
-                case 1:
-                    CorrectSwipe = CorrentSwipe.LEFT;
-                    break;
+            case 3:
+                ArrowType = ArrowTypes.YELLOW;
 
-                case 2:
-                    CorrectSwipe = CorrentSwipe.DOWN;
-                    break;
+                for (int i = 0; i < ArrowDirections.Length; i++)
+                {
+                    ArrowDirections[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
 
-                case 3:
-                    CorrectSwipe = CorrentSwipe.RIGHT;
-                    break;
+                StartCoroutine(RotateArrow(ArrowPosition));
+                break;
 
-                default:
-                    Debug.LogWarning("No Correct Swipe.");
-                    break;
-            }
-        }
-        else
-        {
-            ArrowType = ArrowTypes.RED;
-            ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.red;
-
-            switch (ArrowPosition)
-            {
-                case 0:
-                    CorrectSwipe = CorrentSwipe.DOWN;
-                    break;
-
-                case 1:
-                    CorrectSwipe = CorrentSwipe.RIGHT;
-                    break;
-
-                case 2:
-                    CorrectSwipe = CorrentSwipe.LEFT;
-                    break;
-
-                case 3:
-                    CorrectSwipe = CorrentSwipe.UP;
-                    break;
-
-                default:
-                    Debug.LogWarning("No Correct Swipe.");
-                    break;
-            }
+            default:
+                Debug.LogWarning("No Avaiable Arrow Type");
+                break;
         }
     }
 
@@ -113,24 +79,30 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void AttackEnemy(Player.SwipeDirections PlayerSwipeDirection)
+    public void AttackEnemy(SwipeDirections PlayerSwipeDirection)
     {
         if (!inPlayerRange)
             return;
 
-        if ((PlayerSwipeDirection == global::Player.SwipeDirections.UP && CorrectSwipe == CorrentSwipe.UP) ||
-            (PlayerSwipeDirection == global::Player.SwipeDirections.DOWN && CorrectSwipe == CorrentSwipe.DOWN) ||
-            (PlayerSwipeDirection == global::Player.SwipeDirections.LEFT && CorrectSwipe == CorrentSwipe.LEFT) ||
-            (PlayerSwipeDirection == global::Player.SwipeDirections.RIGHT && CorrectSwipe == CorrentSwipe.RIGHT))
+        if ((PlayerSwipeDirection == SwipeDirections.UP && CorrectSwipe == SwipeDirections.UP) ||
+            (PlayerSwipeDirection == SwipeDirections.DOWN && CorrectSwipe == SwipeDirections.DOWN) ||
+            (PlayerSwipeDirection == SwipeDirections.LEFT && CorrectSwipe == SwipeDirections.LEFT) ||
+            (PlayerSwipeDirection == SwipeDirections.RIGHT && CorrectSwipe == SwipeDirections.RIGHT))
         {
-            Debug.Log("Correct Swipe");
+            int randomPowerUpChance = Random.Range(0, 100);
+
+            if (randomPowerUpChance < 3)
+            {
+                GameManager.instance.CurrentPlayer.GetComponent<Player>().AddLife();
+                GameManager.instance.UpdateLifeText();
+            }
+
+            GameManager.instance.CurrentPlayer.GetComponent<Player>().AddDash();
+            GameManager.instance.UpdateDashText();
+
+            isAlive = false;
             DestroySelf();
         }
-        else
-        {
-            Debug.Log("Player Missed");
-        }
-
     }
 
     private void DestroySelf()
@@ -140,10 +112,12 @@ public class Enemy : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other)
-    { 
+    {
         if (other.name.StartsWith("Player"))
         {
             this.GetComponent<SpriteRenderer>().color = Color.black;
+            SetCorrectDirection(ArrowPosition, ArrowType);
+
             inPlayerRange = true;
         }
     }
@@ -153,8 +127,96 @@ public class Enemy : MonoBehaviour
         if (other.name.StartsWith("Player"))
         {
             this.GetComponent<SpriteRenderer>().color = Color.white;
-            Debug.Log("Player Got Hit");
             inPlayerRange = false;
+
+            if (isAlive && !GameManager.instance.CurrentPlayer.GetComponent<Player>().isImmune)
+            {
+                other.gameObject.GetComponent<Player>().LoseLife();
+                GameManager.instance.UpdateLifeText();
+            }
+        }
+    }
+
+    private IEnumerator RotateArrow(int startingPosition)
+    {
+        int i = startingPosition;
+
+        while (!inPlayerRange)
+        {
+            ArrowDirections[i].SetActive(false);
+
+            i++;
+
+            if (i >= ArrowDirections.Length)
+            {
+                i = 0;
+            }
+                
+            ArrowDirections[i].SetActive(true);
+
+            yield return new WaitForSecondsRealtime(0.4f);
+        }
+    }
+
+    private void SetCorrectDirection(int ArrowPosition, ArrowTypes ArrowType)
+    {
+        switch (ArrowPosition)
+        {
+            case 0:
+
+                if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
+                {
+                    CorrectSwipe = SwipeDirections.UP;
+                }
+                else
+                {
+                    CorrectSwipe = SwipeDirections.DOWN;
+                }
+                
+                break;
+
+            case 1:
+
+                if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
+                {
+                    CorrectSwipe = SwipeDirections.LEFT;
+                }
+                else
+                {
+                    CorrectSwipe = SwipeDirections.RIGHT;
+                }
+
+                break;
+
+            case 2:
+
+                if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
+                {
+                    CorrectSwipe = SwipeDirections.DOWN;
+                }
+                else
+                {
+                    CorrectSwipe = SwipeDirections.UP;
+                }
+
+                break;
+
+            case 3:
+
+                if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
+                {
+                    CorrectSwipe = SwipeDirections.RIGHT;
+                }
+                else
+                {
+                    CorrectSwipe = SwipeDirections.LEFT;
+                }
+
+                break;
+
+            default:
+                Debug.LogWarning("No Correct Swipe.");
+                break;
         }
     }
 }

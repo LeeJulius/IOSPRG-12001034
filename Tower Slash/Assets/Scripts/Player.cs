@@ -2,23 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Player : MonoBehaviour
 {
     private Vector3 initialPosition;
     private Vector3 finalPosition;
 
-    public enum SwipeDirections
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
+    public int lives;
+
+    public int dashIncrement;
+    private int dash;
+    public int dashDuration;
+
+    [HideInInspector]
+    public bool isImmune;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        isImmune = false;
     }
 
     // Update is called once per frame
@@ -36,6 +39,8 @@ public class Player : MonoBehaviour
             if (touch.phase == TouchPhase.Ended)
             {
                 finalPosition = touch.position;
+
+                Debug.Log("Check Swipe Direction");
 
                 CheckSwipeDirection();
             }
@@ -69,9 +74,47 @@ public class Player : MonoBehaviour
             }
         }
 
+        Debug.Log("Swipe Direction");
+
         for (int i = 0; i < GameManager.instance.SpawnedEnemies.Count; i++)
         {
             GameManager.instance.SpawnedEnemies[i].GetComponent<Enemy>().AttackEnemy(SwipeDirection);
+        }
+    }
+
+    public int GetLives()
+    {
+        return lives;
+    }
+
+    public int GetDash()
+    {
+        return dash;
+    }
+
+    public void AddLife()
+    {
+        lives += 1;
+    }
+
+    public void LoseLife()
+    {
+        lives -= 1;
+
+        if (lives <= 0)
+            GameManager.instance.ShowGameOverScreen();
+    }
+
+    public void AddDash()
+    {
+        dash += dashIncrement;
+
+        Debug.Log("Dash: " + dash);
+
+        if (dash >= 100)
+        {
+            GameManager.instance.ShowDashButton();
+            dash = 100;
         }
     }
 }

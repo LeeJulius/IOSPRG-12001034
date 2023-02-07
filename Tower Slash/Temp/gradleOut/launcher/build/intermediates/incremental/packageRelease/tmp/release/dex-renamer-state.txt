@@ -1,0 +1,4 @@
+#Tue Feb 07 21:13:35 SGT 2023
+base.0=F\:\\Subjects\\IOSPRG\\Tower Slash\\Temp\\gradleOut\\launcher\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
