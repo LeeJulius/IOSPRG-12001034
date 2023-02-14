@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public enum SwipeDirections
 {
@@ -13,60 +12,33 @@ public enum SwipeDirections
 }
 
 public class GameManager : Singleton<GameManager>
-{
-    [Header("Camera")]
-    Camera Cam;
-    Vector2 CamBounds;
-
+{ 
     [Header("Background")]
-    [SerializeField]
-    private GameObject BackgroundPrefab;
-    public int BackgroundSpeed;
-
-    [Header("Enemy")]
-    [SerializeField]
-    private GameObject EnemyPrefab;
-    public int enemySpawnTimeMin;
-    public int enemySpawnTimeMax;
-    [HideInInspector]
-    public List<GameObject> SpawnedEnemies;
-
-    [Header("Player")]
-    [SerializeField]
-    private GameObject PlayerPrefab;
-    [HideInInspector]
-    public GameObject CurrentPlayer;
+    [SerializeField] private GameObject BackgroundPrefab;
 
     [Header("UI")]
-    [SerializeField]
-    private Text LivesText;
-    [SerializeField]
-    private Text DashText;
-    public GameObject RetryButton;
+    [SerializeField] private Text LivesText;
+    [SerializeField] private Text DashText;
+    [SerializeField] private Text ScoreText;
+    [SerializeField] private Text ScoreGameOverText;
     public GameObject DashButton;
+
+    private Player CurrentPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Set Cam to Bottom Left
-        Cam = Camera.main;
-        CamBounds = Cam.ScreenToWorldPoint(Vector2.zero);
+        CurrentPlayer = PlayerSelectionManager.instance.CurrentPlayer;
 
         // Spawn Background
         UpdateBackground();
 
-        // Spawn Player
-        SpawnPlayer();
-
-        // Spawn Enemy
-        StartCoroutine(SpawnEnemy());
-
         // Update Text
         UpdateLifeText();
         UpdateDashText();
+        UpdateScoreText();
 
         // Setting UI False
-        RetryButton.SetActive(false);
         DashButton.SetActive(false);
     }
 
@@ -75,25 +47,26 @@ public class GameManager : Singleton<GameManager>
         Instantiate(BackgroundPrefab, Vector3.up, Quaternion.identity).SetActive(true);
     }
 
-    private void SpawnPlayer()
-    {
-         CurrentPlayer = Instantiate(PlayerPrefab, CamBounds * new Vector3(-0.5f, 0, 0), Quaternion.identity);
-    }
-
     public void UpdateLifeText()
     {
-        LivesText.text = "Lives: " + CurrentPlayer.GetComponent<Player>().GetLives();
+        LivesText.text = "Lives: " + CurrentPlayer.GetLives();
     }
 
     public void UpdateDashText()
     {
-        DashText.text = "Dash: " + CurrentPlayer.GetComponent<Player>().GetDash();
+        DashText.text = "Dash: " + CurrentPlayer.GetDash();
+    }
+
+    public void UpdateScoreText()
+    {
+        ScoreText.text = "Score: " + CurrentPlayer.GetScore();
+        ScoreGameOverText.text = "Score: " + CurrentPlayer.GetScore();
     }
 
     public void ShowGameOverScreen()
     {
         Time.timeScale = 0;
-        RetryButton.SetActive(true);
+        SceneManagement.instance.ActivatePanel(SceneManagement.instance.GameOverPanel);
     }
 
     public void ShowDashButton()
@@ -101,62 +74,24 @@ public class GameManager : Singleton<GameManager>
         DashButton.SetActive(true);
     }
 
-    public void RetryGame()
-    {
-        SceneManager.LoadScene("SampleScene");
-    }
-
-    private IEnumerator SpawnEnemy()
-    {
-        int currentSpawnSpeed = Random.Range(enemySpawnTimeMin, enemySpawnTimeMax);
-
-        while (true)
-        {
-            yield return new WaitForSecondsRealtime(1f);
-            currentSpawnSpeed--;
-
-            if (currentSpawnSpeed <= 0)
-            {
-                GameObject SpawnedEnemy = Instantiate(EnemyPrefab, CamBounds * new Vector3(0.3f, -1.2f, 0.0f), Quaternion.identity);
-                SpawnedEnemies.Add(SpawnedEnemy);
-                SpawnedEnemy.SetActive(true);
-
-                currentSpawnSpeed = Random.Range(enemySpawnTimeMin, enemySpawnTimeMax);
-            }
-        }
-    }
-
     public void ActivateDash()
     {
         DashButton.SetActive(false);
-        int dashDuration = CurrentPlayer.GetComponent<Player>().dashDuration;
-        StartCoroutine(DashActivated(dashDuration));
+        StartCoroutine(DashActivated(CurrentPlayer.GetDashDuration()));
     }
 
     public IEnumerator DashActivated(int dashDuration)
     {
-        foreach (GameObject CurrentEnemy in SpawnedEnemies)
+        CurrentPlayer.ActivateDash();
+
+        yield return new WaitForSecondsRealtime(1);
+        dashDuration--;
+        CurrentPlayer.isImmune = true;
+
+        if (dashDuration <= 0)
         {
-            CurrentEnemy.GetComponent<Enemy>().moveSpeed *= 2;
+            CurrentPlayer.DeactivateDash();
+            CurrentPlayer.isImmune = false;
         }
-
-        bool dashActivated = true;
-
-        while (dashActivated)
-        {
-            yield return new WaitForSecondsRealtime(1);
-            dashDuration--;
-            CurrentPlayer.GetComponent<Player>().isImmune = true;
-
-            if (dashDuration <= 0)
-            {
-                foreach (GameObject CurrentEnemy in SpawnedEnemies)
-                {
-                    CurrentEnemy.GetComponent<Enemy>().moveSpeed /= 2;
-                    CurrentPlayer.GetComponent<Player>().isImmune = false;
-                    dashActivated = false;
-                }
-            }
-        } 
     }
 }

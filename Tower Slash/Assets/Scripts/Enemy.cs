@@ -24,12 +24,14 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Conditions")]
     private bool inPlayerRange;
     private bool isAlive;
+    [HideInInspector] public bool isDashed;
 
     // Start is called before the first frame update
     void Start()
     {
         inPlayerRange = false;
         isAlive = true;
+        isDashed = false;
 
         // Setting Arrow Position
         ArrowPosition = Random.Range(0, ArrowDirections.Length);
@@ -71,6 +73,11 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        EnemyMovement();
+    }
+
+    public void EnemyMovement()
+    {
         transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
 
         if (transform.position.y < -10.0f)
@@ -84,22 +91,32 @@ public class Enemy : MonoBehaviour
         if (!inPlayerRange)
             return;
 
+        Player CurrentPlayer = PlayerSelectionManager.instance.CurrentPlayer.GetComponent<Player>();
+
+        // Checking if Player Swiped Correct Direction
         if ((PlayerSwipeDirection == SwipeDirections.UP && CorrectSwipe == SwipeDirections.UP) ||
             (PlayerSwipeDirection == SwipeDirections.DOWN && CorrectSwipe == SwipeDirections.DOWN) ||
             (PlayerSwipeDirection == SwipeDirections.LEFT && CorrectSwipe == SwipeDirections.LEFT) ||
             (PlayerSwipeDirection == SwipeDirections.RIGHT && CorrectSwipe == SwipeDirections.RIGHT))
         {
+            // Randomizing Powerup Chance
             int randomPowerUpChance = Random.Range(0, 100);
 
             if (randomPowerUpChance < 3)
             {
-                GameManager.instance.CurrentPlayer.GetComponent<Player>().AddLife();
+                CurrentPlayer.SetLives(CurrentPlayer.GetLives() + 1);
                 GameManager.instance.UpdateLifeText();
             }
 
-            GameManager.instance.CurrentPlayer.GetComponent<Player>().AddDash();
+            // Add Dash
+            CurrentPlayer.SetDash(CurrentPlayer.GetDash() + CurrentPlayer.GetDashIncrement());
             GameManager.instance.UpdateDashText();
 
+            // Add Score
+            CurrentPlayer.SetScore(CurrentPlayer.GetScore() + 1);
+            GameManager.instance.UpdateScoreText();
+
+            // Kill Enemy
             isAlive = false;
             DestroySelf();
         }
@@ -107,7 +124,7 @@ public class Enemy : MonoBehaviour
 
     private void DestroySelf()
     {
-        GameManager.instance.SpawnedEnemies.Remove(this.gameObject);
+        EnemySpawner.instance.SpawnedEnemies.Remove(this.gameObject);
         Destroy(gameObject);
     }
 
@@ -129,9 +146,11 @@ public class Enemy : MonoBehaviour
             this.GetComponent<SpriteRenderer>().color = Color.white;
             inPlayerRange = false;
 
-            if (isAlive && !GameManager.instance.CurrentPlayer.GetComponent<Player>().isImmune)
+            Player CurrentPlayer = other.gameObject.GetComponent<Player>();
+
+            if (isAlive && !CurrentPlayer.isImmune)
             {
-                other.gameObject.GetComponent<Player>().LoseLife();
+                CurrentPlayer.SetLives(CurrentPlayer.GetLives() - 1);
                 GameManager.instance.UpdateLifeText();
             }
         }

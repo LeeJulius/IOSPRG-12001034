@@ -2,26 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class Player : MonoBehaviour
 {
     private Vector3 initialPosition;
     private Vector3 finalPosition;
 
-    public int lives;
+    [Header("Lives")]
+    private int lives;
 
-    public int dashIncrement;
-    private int dash;
-    public int dashDuration;
+    [Header("Score")]
+    private int score;
 
-    [HideInInspector]
-    public bool isImmune;
+    [Header("Dash")]
+    [SerializeField] private int dashIncrement;
+    [SerializeField] private int dash;
+    [SerializeField] private int dashDuration;
+
+    [HideInInspector] public bool isImmune;
 
     // Start is called before the first frame update
     void Start()
     {
         isImmune = false;
+        score = 0;
     }
 
     // Update is called once per frame
@@ -36,13 +39,20 @@ public class Player : MonoBehaviour
                 initialPosition = touch.position;
             }
 
+            if (touch.phase == TouchPhase.Stationary)
+            {
+                ActivateDash();
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                DeactivateDash();
+            }
+
             if (touch.phase == TouchPhase.Ended)
             {
                 finalPosition = touch.position;
-
-                Debug.Log("Check Swipe Direction");
-
                 CheckSwipeDirection();
+                DeactivateDash();
             }
         }
     }
@@ -50,6 +60,9 @@ public class Player : MonoBehaviour
     private void CheckSwipeDirection()
     {
         SwipeDirections SwipeDirection;
+
+        if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
+            return;
 
         if (Mathf.Max(finalPosition.x - initialPosition.x, initialPosition.x - finalPosition.x) > Mathf.Max(finalPosition.y - initialPosition.y, initialPosition.y - finalPosition.y))
         {
@@ -74,42 +87,56 @@ public class Player : MonoBehaviour
             }
         }
 
-        Debug.Log("Swipe Direction");
-
-        for (int i = 0; i < GameManager.instance.SpawnedEnemies.Count; i++)
+        for (int i = 0; i < EnemySpawner.instance.SpawnedEnemies.Count; i++)
         {
-            GameManager.instance.SpawnedEnemies[i].GetComponent<Enemy>().AttackEnemy(SwipeDirection);
+            EnemySpawner.instance.SpawnedEnemies[i].GetComponent<Enemy>().AttackEnemy(SwipeDirection);
         }
     }
 
-    public int GetLives()
+    public void ActivateDash()
     {
-        return lives;
+        if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
+            return;
+
+        foreach (GameObject CurrentEnemy in EnemySpawner.instance.SpawnedEnemies)
+        {
+            if (!CurrentEnemy.GetComponent<Enemy>().isDashed)
+            {
+                CurrentEnemy.GetComponent<Enemy>().moveSpeed *= 2;
+                CurrentEnemy.GetComponent<Enemy>().isDashed = true;
+            }
+        }
     }
 
-    public int GetDash()
+    public void DeactivateDash()
     {
-        return dash;
+        if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
+            return;
+
+        foreach (GameObject CurrentEnemy in EnemySpawner.instance.SpawnedEnemies)
+        {
+            if (CurrentEnemy.GetComponent<Enemy>().isDashed)
+            {
+                CurrentEnemy.GetComponent<Enemy>().moveSpeed /= 2;
+                CurrentEnemy.GetComponent<Enemy>().isDashed = false;
+            }
+        }
     }
 
-    public void AddLife()
-    {
-        lives += 1;
-    }
-
-    public void LoseLife()
-    {
-        lives -= 1;
-
+    #region Getters and Setters
+    public int GetLives() { return lives; }
+    public void SetLives(int _lives) { 
+        
+        lives = _lives;
+        
         if (lives <= 0)
             GameManager.instance.ShowGameOverScreen();
     }
 
-    public void AddDash()
-    {
-        dash += dashIncrement;
-
-        Debug.Log("Dash: " + dash);
+    public int GetDash() { return dash; }
+    public void SetDash(int _dash) { 
+        
+        dash = _dash;
 
         if (dash >= 100)
         {
@@ -117,4 +144,15 @@ public class Player : MonoBehaviour
             dash = 100;
         }
     }
+
+    public int GetDashIncrement() { return dashIncrement; }
+    public void SetDashIncrement(int _dashIncrement) { dashIncrement = _dashIncrement; }
+
+    public int GetDashDuration() { return dashDuration; }
+    public void SetDashDuration(int _dashDuration) { dashDuration = _dashDuration; 
+    }
+
+    public int GetScore() { return score; }
+    public void SetScore(int _score) { score = _score; }
+    #endregion
 }
