@@ -182,14 +182,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fc647f64314e394c83ca0adc63b98e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ArrowType: 1
   ArrowDirections:
   - {fileID: 5009386285282491586}
   - {fileID: 6017185148444326853}
   - {fileID: 4457162805649964564}
   - {fileID: 1094302121253221232}
-  Player: {fileID: 6258514945151227716, guid: 1058ef51dd17c3d4484490d5cc54b86e, type: 3}
   moveSpeed: 1
+  ArrowType: 1
+  isDashed: 0
 --- !u!61 &2702420501455265568
 BoxCollider2D:
   m_ObjectHideFlags: 0

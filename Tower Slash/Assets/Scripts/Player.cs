@@ -34,11 +34,13 @@ public class Player : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
+            // Get Initial Touch Location
             if (touch.phase == TouchPhase.Began)
             {
                 initialPosition = touch.position;
             }
 
+            // Move Game faster if player holds 
             if (touch.phase == TouchPhase.Stationary)
             {
                 ActivateDash();
@@ -48,6 +50,7 @@ public class Player : MonoBehaviour
                 DeactivateDash();
             }
 
+            // Get Final Touch Location and Calculate for Distance
             if (touch.phase == TouchPhase.Ended)
             {
                 finalPosition = touch.position;
@@ -61,9 +64,11 @@ public class Player : MonoBehaviour
     {
         SwipeDirections SwipeDirection;
 
+        // Return if no enemies spawns
         if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
             return;
 
+        // Calculate what direction player swaped
         if (Mathf.Max(finalPosition.x - initialPosition.x, initialPosition.x - finalPosition.x) > Mathf.Max(finalPosition.y - initialPosition.y, initialPosition.y - finalPosition.y))
         {
             if (initialPosition.x > finalPosition.x)
@@ -87,12 +92,14 @@ public class Player : MonoBehaviour
             }
         }
 
+        // Send player swipe location to enemy
         for (int i = 0; i < EnemySpawner.instance.SpawnedEnemies.Count; i++)
         {
             EnemySpawner.instance.SpawnedEnemies[i].GetComponent<Enemy>().AttackEnemy(SwipeDirection);
         }
     }
 
+    #region DashPowerups
     public void ActivateDash()
     {
         if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
@@ -122,6 +129,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+    #endregion
 
     #region Getters and Setters
     public int GetLives() { return lives; }
@@ -149,8 +157,7 @@ public class Player : MonoBehaviour
     public void SetDashIncrement(int _dashIncrement) { dashIncrement = _dashIncrement; }
 
     public int GetDashDuration() { return dashDuration; }
-    public void SetDashDuration(int _dashDuration) { dashDuration = _dashDuration; 
-    }
+    public void SetDashDuration(int _dashDuration) { dashDuration = _dashDuration; }
 
     public int GetScore() { return score; }
     public void SetScore(int _score) { score = _score; }

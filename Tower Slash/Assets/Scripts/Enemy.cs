@@ -33,26 +33,40 @@ public class Enemy : MonoBehaviour
         isAlive = true;
         isDashed = false;
 
-        // Setting Arrow Position
+        SetEnemy();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        EnemyMovement();
+    }
+
+    private void SetEnemy()
+    {
+        // Setting Starting Arrow Position
         ArrowPosition = Random.Range(0, ArrowDirections.Length);
         ArrowDirections[ArrowPosition].SetActive(true);
 
         // Setting Enemy Type
         int EnemyType = Random.Range(1, 4);
 
-        // Applying Enemy Characteristics
+        // Applying Enemy Characteristics (Color of Arrow)
         switch (EnemyType)
         {
+            // Green Enemy - Same Direction
             case 1:
                 ArrowType = ArrowTypes.GREEN;
                 ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.green;
                 break;
 
+            // Red Enemy - Opposite Direction
             case 2:
                 ArrowType = ArrowTypes.RED;
                 ArrowDirections[ArrowPosition].GetComponent<SpriteRenderer>().color = Color.red;
                 break;
 
+            // Yellow Enemy - Rotating Direction
             case 3:
                 ArrowType = ArrowTypes.YELLOW;
 
@@ -70,16 +84,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void EnemyMovement()
     {
-        EnemyMovement();
-    }
-
-    public void EnemyMovement()
-    {
+        // Move Enemy Down
         transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
 
+        // Destroy Self if out of screen
         if (transform.position.y < -10.0f)
         {
             DestroySelf();
@@ -94,14 +104,12 @@ public class Enemy : MonoBehaviour
         Player CurrentPlayer = PlayerSelectionManager.instance.CurrentPlayer.GetComponent<Player>();
 
         // Checking if Player Swiped Correct Direction
-        if ((PlayerSwipeDirection == SwipeDirections.UP && CorrectSwipe == SwipeDirections.UP) ||
-            (PlayerSwipeDirection == SwipeDirections.DOWN && CorrectSwipe == SwipeDirections.DOWN) ||
-            (PlayerSwipeDirection == SwipeDirections.LEFT && CorrectSwipe == SwipeDirections.LEFT) ||
-            (PlayerSwipeDirection == SwipeDirections.RIGHT && CorrectSwipe == SwipeDirections.RIGHT))
+        if (PlayerSwipeDirection == CorrectSwipe)
         {
             // Randomizing Powerup Chance
             int randomPowerUpChance = Random.Range(0, 100);
 
+            // Add Extra Life if 3%
             if (randomPowerUpChance < 3)
             {
                 CurrentPlayer.SetLives(CurrentPlayer.GetLives() + 1);
@@ -130,6 +138,7 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // Make Enemy Attackble when in Range with Player
         if (other.name.StartsWith("Player"))
         {
             this.GetComponent<SpriteRenderer>().color = Color.black;
@@ -148,6 +157,7 @@ public class Enemy : MonoBehaviour
 
             Player CurrentPlayer = other.gameObject.GetComponent<Player>();
 
+            // -1 HP if Enemy Passes Player (and not in power up)
             if (isAlive && !CurrentPlayer.isImmune)
             {
                 CurrentPlayer.SetLives(CurrentPlayer.GetLives() - 1);
@@ -160,6 +170,7 @@ public class Enemy : MonoBehaviour
     {
         int i = startingPosition;
 
+        // Rotate Arrow while not in player range
         while (!inPlayerRange)
         {
             ArrowDirections[i].SetActive(false);
@@ -181,8 +192,8 @@ public class Enemy : MonoBehaviour
     {
         switch (ArrowPosition)
         {
+            // If Arrow Position is Up
             case 0:
-
                 if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
                 {
                     CorrectSwipe = SwipeDirections.UP;
@@ -194,8 +205,8 @@ public class Enemy : MonoBehaviour
                 
                 break;
 
+            // If Arrow Position is Left
             case 1:
-
                 if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
                 {
                     CorrectSwipe = SwipeDirections.LEFT;
@@ -204,11 +215,10 @@ public class Enemy : MonoBehaviour
                 {
                     CorrectSwipe = SwipeDirections.RIGHT;
                 }
-
                 break;
 
+            // If Arrow Position is Down
             case 2:
-
                 if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
                 {
                     CorrectSwipe = SwipeDirections.DOWN;
@@ -217,11 +227,10 @@ public class Enemy : MonoBehaviour
                 {
                     CorrectSwipe = SwipeDirections.UP;
                 }
-
                 break;
 
+            // If Arrow Position is Right
             case 3:
-
                 if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)
                 {
                     CorrectSwipe = SwipeDirections.RIGHT;
@@ -230,7 +239,6 @@ public class Enemy : MonoBehaviour
                 {
                     CorrectSwipe = SwipeDirections.LEFT;
                 }
-
                 break;
 
             default:

@@ -28,7 +28,15 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
+        DashButton.SetActive(false);
+    }
+
+    public void StartGame()
+    {
         CurrentPlayer = PlayerSelectionManager.instance.CurrentPlayer;
+        
+        // Spawn Enemy
+        EnemySpawner.instance.StartCoroutine("SpawnEnemy");
 
         // Spawn Background
         UpdateBackground();
@@ -37,9 +45,6 @@ public class GameManager : Singleton<GameManager>
         UpdateLifeText();
         UpdateDashText();
         UpdateScoreText();
-
-        // Setting UI False
-        DashButton.SetActive(false);
     }
 
     public void UpdateBackground()
@@ -55,6 +60,11 @@ public class GameManager : Singleton<GameManager>
     public void UpdateDashText()
     {
         DashText.text = "Dash: " + CurrentPlayer.GetDash();
+    }
+
+    public void UpdateDashDurationText(int dashDuration)
+    {
+        DashText.text = "Dash Duration: " + dashDuration;
     }
 
     public void UpdateScoreText()
@@ -83,15 +93,13 @@ public class GameManager : Singleton<GameManager>
     public IEnumerator DashActivated(int dashDuration)
     {
         CurrentPlayer.ActivateDash();
-
-        yield return new WaitForSecondsRealtime(1);
-        dashDuration--;
+        UpdateDashText();
         CurrentPlayer.isImmune = true;
 
-        if (dashDuration <= 0)
-        {
-            CurrentPlayer.DeactivateDash();
-            CurrentPlayer.isImmune = false;
-        }
+        yield return new WaitForSecondsRealtime(dashDuration);
+
+        // Remove Immunity
+        CurrentPlayer.DeactivateDash();
+        CurrentPlayer.isImmune = false;
     }
 }

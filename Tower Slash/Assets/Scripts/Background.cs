@@ -5,19 +5,14 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float moveSpeed;
+    [SerializeField] private float moveSpeed;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
+        // Move Background Down
         transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
 
+        // Delete Background if out of bounds
         if (transform.position.y < -5.0f)
         {
             Destroy(gameObject);
