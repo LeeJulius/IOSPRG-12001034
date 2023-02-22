@@ -38,16 +38,7 @@ public class Player : MonoBehaviour
             if (touch.phase == TouchPhase.Began)
             {
                 initialPosition = touch.position;
-            }
-
-            // Move Game faster if player holds 
-            if (touch.phase == TouchPhase.Stationary)
-            {
-                ActivateDash();
-            }
-            else if (touch.phase == TouchPhase.Moved)
-            {
-                DeactivateDash();
+                StartCoroutine(ActivateDash(2));
             }
 
             // Get Final Touch Location and Calculate for Distance
@@ -55,7 +46,6 @@ public class Player : MonoBehaviour
             {
                 finalPosition = touch.position;
                 CheckSwipeDirection();
-                DeactivateDash();
             }
         }
     }
@@ -100,10 +90,10 @@ public class Player : MonoBehaviour
     }
 
     #region DashPowerups
-    public void ActivateDash()
+    public IEnumerator ActivateDash(int dashTime)
     {
         if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
-            return;
+            yield return null;
 
         foreach (GameObject CurrentEnemy in EnemySpawner.instance.SpawnedEnemies)
         {
@@ -113,12 +103,8 @@ public class Player : MonoBehaviour
                 CurrentEnemy.GetComponent<Enemy>().isDashed = true;
             }
         }
-    }
 
-    public void DeactivateDash()
-    {
-        if (EnemySpawner.instance.SpawnedEnemies.Count <= 0)
-            return;
+        yield return new WaitForSecondsRealtime(dashTime);
 
         foreach (GameObject CurrentEnemy in EnemySpawner.instance.SpawnedEnemies)
         {
@@ -136,9 +122,14 @@ public class Player : MonoBehaviour
     public void SetLives(int _lives) { 
         
         lives = _lives;
-        
+
         if (lives <= 0)
+        {
             GameManager.instance.ShowGameOverScreen();
+            EnemySpawner.instance.StopCoroutine(EnemySpawner.instance.SpawnEnemyCoroutine);
+            EnemySpawner.instance.DespawnSpawnedEnemies();
+            Destroy(this.gameObject);
+        }
     }
 
     public int GetDash() { return dash; }
@@ -161,5 +152,6 @@ public class Player : MonoBehaviour
 
     public int GetScore() { return score; }
     public void SetScore(int _score) { score = _score; }
+
     #endregion
 }

@@ -146,5 +146,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashIncrement: 5
   dash: 0
-  dashDuration: 10
+  dashDuration: 15
   isImmune: 0

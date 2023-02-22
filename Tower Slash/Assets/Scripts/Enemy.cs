@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     private int ArrowPosition;
     private SwipeDirections CorrectSwipe;
 
+    private IEnumerator ArrowMovement;
+
     [Header("Enemy Conditions")]
     private bool inPlayerRange;
     private bool isAlive;
@@ -75,7 +77,8 @@ public class Enemy : MonoBehaviour
                     ArrowDirections[i].GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
 
-                StartCoroutine(RotateArrow(ArrowPosition));
+                ArrowMovement = RotateArrow();
+                StartCoroutine(ArrowMovement);
                 break;
 
             default:
@@ -142,6 +145,10 @@ public class Enemy : MonoBehaviour
         if (other.name.StartsWith("Player"))
         {
             this.GetComponent<SpriteRenderer>().color = Color.black;
+
+            if (ArrowType == ArrowTypes.YELLOW)
+                StopCoroutine(ArrowMovement);
+
             SetCorrectDirection(ArrowPosition, ArrowType);
 
             inPlayerRange = true;
@@ -166,23 +173,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator RotateArrow(int startingPosition)
+    private IEnumerator RotateArrow()
     {
-        int i = startingPosition;
-
         // Rotate Arrow while not in player range
-        while (!inPlayerRange)
+        while (true)
         {
-            ArrowDirections[i].SetActive(false);
+            Debug.Log("Arrow Position: " + ArrowPosition);
 
-            i++;
+            ArrowDirections[ArrowPosition].SetActive(false);
 
-            if (i >= ArrowDirections.Length)
+            ArrowPosition++;
+
+            if (ArrowPosition >= ArrowDirections.Length)
             {
-                i = 0;
+                ArrowPosition = 0;
             }
                 
-            ArrowDirections[i].SetActive(true);
+            ArrowDirections[ArrowPosition].SetActive(true);
 
             yield return new WaitForSecondsRealtime(0.4f);
         }
@@ -190,8 +197,10 @@ public class Enemy : MonoBehaviour
 
     private void SetCorrectDirection(int ArrowPosition, ArrowTypes ArrowType)
     {
+        Debug.Log("Correct Position: " + ArrowPosition);
+
         switch (ArrowPosition)
-        {
+        { 
             // If Arrow Position is Up
             case 0:
                 if (ArrowType == ArrowTypes.GREEN || ArrowType == ArrowTypes.YELLOW)

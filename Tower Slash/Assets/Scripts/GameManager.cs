@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
         CurrentPlayer = PlayerSelectionManager.instance.CurrentPlayer;
         
         // Spawn Enemy
-        EnemySpawner.instance.StartCoroutine("SpawnEnemy");
+        EnemySpawner.instance.StartCoroutine(EnemySpawner.instance.SpawnEnemyCoroutine);
 
         // Spawn Background
         UpdateBackground();
@@ -62,9 +62,9 @@ public class GameManager : Singleton<GameManager>
         DashText.text = "Dash: " + CurrentPlayer.GetDash();
     }
 
-    public void UpdateDashDurationText(int dashDuration)
+    public void DashActivatedText()
     {
-        DashText.text = "Dash Duration: " + dashDuration;
+        DashText.text = "Dash Activated!";
     }
 
     public void UpdateScoreText()
@@ -92,14 +92,14 @@ public class GameManager : Singleton<GameManager>
 
     public IEnumerator DashActivated(int dashDuration)
     {
-        CurrentPlayer.ActivateDash();
-        UpdateDashText();
+        CurrentPlayer.ActivateDash(dashDuration);
+        DashActivatedText();
         CurrentPlayer.isImmune = true;
+        CurrentPlayer.SetDash(0);
 
         yield return new WaitForSecondsRealtime(dashDuration);
 
-        // Remove Immunity
-        CurrentPlayer.DeactivateDash();
+        UpdateDashText();
         CurrentPlayer.isImmune = false;
     }
 }
