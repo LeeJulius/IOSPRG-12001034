@@ -2,7 +2,6 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-
 PreBuild_IOSPRG/[Ll]ibrary/
 PreBuild_IOSPRG/[Tt]emp/
 PreBuild_IOSPRG/[Oo]bj/
@@ -10,7 +9,6 @@ PreBuild_IOSPRG/[Bb]uild/
 PreBuild_IOSPRG/[Bb]uilds/
 PreBuild_IOSPRG/[Ll]ogs/
 PreBuild_IOSPRG/[Mm]emoryCaptures/
-
 Tower Slash/[Ll]ibrary/
 Tower Slash/[Tt]emp/
 Tower Slash/[Oo]bj/
