@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class AmmoBox : MonoBehaviour
 {
-    [SerializeField] private GameObject AmmoBoxPrefab;
     [SerializeField] protected int ammo;
     [SerializeField] protected WeaponTypes weapon;
 
-    protected virtual void AmmoBoxPickedUp(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        PlayerInventory playerInventory = other.gameObject.GetComponent<PlayerInventory>();
-        playerInventory.PickUpAmmo(weapon, ammo);
+        // If Ammo Box collided with Player
+        if (other.collider.name.StartsWith("Player"))
+        {
+            // Pickup Ammo Box
+            PlayerInventory playerInventory = other.gameObject.GetComponent<PlayerInventory>();
+            playerInventory.PickUpAmmo(weapon, ammo);
 
-        Destroy(gameObject);
+            // Despawn Ammo Box
+            Destroy(gameObject);
+        }
     }
 }

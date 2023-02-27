@@ -23,13 +23,16 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        // Attaching rb to Player
         rb = this.GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
     {
+        // Changing Player (Position)
         rb.position += new Vector2(speedX, speedY) * Time.deltaTime;
 
+        // Changing Aim (Rotating)
         PlayerHands.transform.Rotate(new Vector3(0, 0, 1), rotation);
     }
 
@@ -37,13 +40,11 @@ public class PlayerController : MonoBehaviour
     public void HorizontalMovement(int direction)
     {
         speedX = direction * horizontalSpeed;
-        Debug.Log("Horizontal Speed: " + speedX);
     }
 
     public void VerticalMovement(int direction)
     {
         speedY = direction * verticalSpeed;
-        Debug.Log("Vertical Speed: " + speedY);
     }
     #endregion
 
@@ -51,46 +52,42 @@ public class PlayerController : MonoBehaviour
     public void RotateGun(int direction)
     {
         rotation = direction * rotationalSpeed;
-        Debug.Log("Rotation Speed: " + rotation);
     }
     #endregion
 
     #region Equip Gun
     public void EquipGun()
     {
+        // Unequiping all weapons
         foreach(GameObject equipabbleWeapons in EquipableItems)
         {
             equipabbleWeapons.SetActive(false);
         }
 
+        // Getting weapon to currently equip
         PlayerInventory playerInventory = this.GetComponent<PlayerInventory>();
-
         WeaponTypes weaponEquipped = playerInventory.GetCurrentInventoryPrefab().GetComponent<InventoryPanel>().GetWeaponType();
 
+        // Equip Weapon
         switch(weaponEquipped)
         {
             case WeaponTypes.FIST:
-                Debug.Log("Fist Equipped");
                 EquipableItems[0].SetActive(true);
                 break;
 
             case WeaponTypes.PISTOL:
-                Debug.Log("Pistol Equipped");
                 EquipableItems[1].SetActive(true);
                 break;
 
             case WeaponTypes.SHOTGUN:
-                Debug.Log("Shotgun Equipped");
                 EquipableItems[2].SetActive(true);
                 break;
 
             case WeaponTypes.SMG:
-                Debug.Log("SMG Equipped");
                 EquipableItems[3].SetActive(true);
                 break;
 
             case WeaponTypes.RPG:
-                Debug.Log("RPG Equipped");
                 EquipableItems[4].SetActive(true);
                 break;
 
@@ -99,7 +96,5 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-
-
     #endregion
 }

@@ -506,10 +506,16 @@ MonoBehaviour:
   inventorySize: 5
   InventorySlotPanel: {fileID: 3935448010822242919, guid: 55317e0236357af40a9b22fcd3c00a1e, type: 3}
   InventorySlotLocation: {fileID: 0}
-  pistolMaxAmmo: 60
-  smgMaxAmmo: 90
-  shotgunMaxAmmo: 120
-  rpgMaxAmmo: 5
+  currentAmmo:
+    pistolAmmo: 0
+    smgAmmo: 0
+    shotgunAmmo: 0
+    rpgAmmo: 0
+  maxAmmo:
+    pistolAmmo: 90
+    smgAmmo: 120
+    shotgunAmmo: 60
+    rpgAmmo: 5
   PistolAmmoText: {fileID: 0}
   SMGAmmoText: {fileID: 0}
   ShotgunAmmoText: {fileID: 0}

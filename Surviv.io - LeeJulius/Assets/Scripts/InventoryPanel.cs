@@ -26,19 +26,16 @@ public class InventoryPanel : MonoBehaviour
 
     private void SetPanelNumberText(int panelNumber)
     {
-        Debug.Log("Panel Number: " + panelNumber);
         PanelNumberText.text = panelNumber.ToString();
     }
 
     private void SetCurrentAmmoText(int currentAmmo)
     {
-        Debug.Log("Current Ammo: " + currentAmmo);
         CurrentAmmoText.text = currentAmmo.ToString();
     }
 
     public void SetMaxAmmoText(int totalAmmo)
     {
-        Debug.Log("Max Ammo: " + totalAmmo);
         TotalAmmoText.text = totalAmmo.ToString();
     }
 
@@ -46,6 +43,7 @@ public class InventoryPanel : MonoBehaviour
     {
         weaponEquipped = weapon;
 
+        // Applying weapons to the UI 
         switch (weapon)
         {
             case WeaponTypes.FIST:
