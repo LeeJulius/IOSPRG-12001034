@@ -7,6 +7,9 @@ public class GunComponent : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] GameObject BulletPrefab;
 
+    [Header("Fire Location")]
+    [SerializeField] GameObject FireLocation;
+
     [Header("Gun Ammo")]
     [SerializeField] int currentAmmo;
     [SerializeField] int maxClip;
@@ -22,7 +25,7 @@ public class GunComponent : MonoBehaviour
 
     public virtual void Shoot()
     {
-
+        Instantiate(BulletPrefab, FireLocation.transform);
     }
 
     public virtual void Reload()

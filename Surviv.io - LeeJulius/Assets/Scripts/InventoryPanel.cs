@@ -5,6 +5,9 @@ using TMPro;
 
 public class InventoryPanel : MonoBehaviour
 {
+    [Header("Panel Type")]
+    [SerializeField] private InventorySlotTypes inventorySlotType;
+
     [Header("Panel Number Text")]
     [SerializeField] private TextMeshProUGUI PanelNumberText;
 
@@ -14,10 +17,11 @@ public class InventoryPanel : MonoBehaviour
 
     [Header("Gun")]
     [SerializeField] private List<GameObject> GunPrefab;
-    public WeaponTypes weaponEquipped;
+    private WeaponTypes weaponEquipped;
 
-    public void Init(int panelNumber, WeaponTypes weaponType, int currentAmmo, int maxAmmo)
+    public void Init(InventorySlotTypes _inventorySlotType, int panelNumber, WeaponTypes weaponType, int currentAmmo, int maxAmmo)
     {
+        inventorySlotType = _inventorySlotType;
         SetPanelNumberText(panelNumber);
         SetGunPrefab(weaponType);
         SetCurrentAmmoText(currentAmmo);
@@ -26,7 +30,22 @@ public class InventoryPanel : MonoBehaviour
 
     private void SetPanelNumberText(int panelNumber)
     {
-        PanelNumberText.text = panelNumber.ToString();
+        switch (inventorySlotType)
+        {
+            case InventorySlotTypes.PRIMARY:
+                PanelNumberText.text = panelNumber.ToString() + ": Primary";
+                break;
+
+            case InventorySlotTypes.SECONDARY:
+                PanelNumberText.text = panelNumber.ToString() + ": Secondary";
+                break;
+
+            default:
+                Debug.LogWarning("No Avaiable Inventory Slot Type");
+                break;
+        }
+
+        
     }
 
     private void SetCurrentAmmoText(int currentAmmo)
@@ -42,6 +61,11 @@ public class InventoryPanel : MonoBehaviour
     public void SetGunPrefab(WeaponTypes weapon)
     {
         weaponEquipped = weapon;
+
+        foreach (GameObject CurrentGunPrefab in GunPrefab)
+        {
+            CurrentGunPrefab.SetActive(false);
+        }
 
         // Applying weapons to the UI 
         switch (weapon)
@@ -71,8 +95,14 @@ public class InventoryPanel : MonoBehaviour
         }
     }
 
+    // sus
     public WeaponTypes GetWeaponType()
     {
         return weaponEquipped;
+    }
+
+    public InventorySlotTypes GetInventorySlotType()
+    {
+        return inventorySlotType;
     }
 }

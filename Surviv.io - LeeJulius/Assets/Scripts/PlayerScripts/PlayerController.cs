@@ -19,10 +19,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
 
     [Header("Player Guns")]
-    [SerializeField] private List<GameObject> EquipableItems;
+    [SerializeField]private List<GameObject> EquipableItems;
 
     private void Start()
     {
+        EquipableItems = new List<GameObject>();
+
         // Attaching rb to Player
         rb = this.GetComponent<Rigidbody2D>();
     }
@@ -55,8 +57,8 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Equip Gun
-    public void EquipGun()
+    #region Inventory Functions
+    public void SwitchWeapon()
     {
         // Unequiping all weapons
         foreach(GameObject equipabbleWeapons in EquipableItems)
@@ -66,35 +68,46 @@ public class PlayerController : MonoBehaviour
 
         // Getting weapon to currently equip
         PlayerInventory playerInventory = this.GetComponent<PlayerInventory>();
-        WeaponTypes weaponEquipped = playerInventory.GetCurrentInventoryPrefab().GetComponent<InventoryPanel>().GetWeaponType();
+        int currentInventorySlot = playerInventory.GetCurrentInventorySlot();
+
+        Debug.Log(currentInventorySlot);
 
         // Equip Weapon
-        switch(weaponEquipped)
+        EquipableItems[currentInventorySlot].SetActive(true);
+    }
+
+    public void EquipWeapon(GameObject gunToEquip, int inventorySlot)
+    {
+        GameObject CurrentGun = Instantiate(gunToEquip, PlayerHands.transform);
+        CurrentGun.transform.parent = PlayerHands.transform;
+
+        if (EquipableItems.Count <= inventorySlot)
         {
-            case WeaponTypes.FIST:
-                EquipableItems[0].SetActive(true);
-                break;
-
-            case WeaponTypes.PISTOL:
-                EquipableItems[1].SetActive(true);
-                break;
-
-            case WeaponTypes.SHOTGUN:
-                EquipableItems[2].SetActive(true);
-                break;
-
-            case WeaponTypes.SMG:
-                EquipableItems[3].SetActive(true);
-                break;
-
-            case WeaponTypes.RPG:
-                EquipableItems[4].SetActive(true);
-                break;
-
-            default:
-                Debug.LogError("No Equipablle Weapon");
-                break;
+            
+            EquipableItems.Add(CurrentGun);
         }
+        else
+        {
+            Destroy(EquipableItems[inventorySlot]);
+            EquipableItems.RemoveAt(inventorySlot);
+            EquipableItems.Insert(inventorySlot, CurrentGun);
+        }
+
+        SwitchWeapon();
+    }
+
+    #endregion
+
+    #region Gun Functions
+    public void ShootGun()
+    {
+        // Getting weapon to currently equip
+
+        PlayerInventory playerInventory = this.GetComponent<PlayerInventory>();
+        int currentInventorySlot = playerInventory.GetCurrentInventorySlot();
+
+        // Equip Weapon
+        EquipableItems[currentInventorySlot].GetComponent<GunComponent>();
     }
     #endregion
 }

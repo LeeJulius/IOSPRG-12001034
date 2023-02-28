@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class GunPickup : MonoBehaviour
 {
-    [SerializeField] protected GameObject WeaponPrefab;
-    [SerializeField] protected WeaponTypes weapon;
+    [SerializeField] private GameObject WeaponPrefab;
+    [SerializeField] private WeaponTypes weapon;
 
-    protected void GunPickedUp()
+    private void OnCollisionEnter2D(Collision2D other)
     {
+        if (other.collider.name.StartsWith("Player"))
+        {
+            PlayerInventory platerInventory = other.gameObject.GetComponent<PlayerInventory>();
 
+            if (platerInventory.IsPickUpValid(weapon))
+            {
+                // Pickup Gun Pickup
+                PlayerInventory playerInventory = other.gameObject.GetComponent<PlayerInventory>();
+                playerInventory.PickUpGun(weapon, WeaponPrefab);
+
+                // Despawn Gun Pickup
+                Destroy(gameObject);
+            }
+        }
     }
 }

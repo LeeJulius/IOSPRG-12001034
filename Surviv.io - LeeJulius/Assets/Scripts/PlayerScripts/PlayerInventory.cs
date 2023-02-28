@@ -16,9 +16,14 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private GameObject InventorySlotPanel;
     [SerializeField] private GameObject InventorySlotLocation;
 
+    [Header("Player Default Weapon")]
+    [SerializeField] private GameObject PlayerFists;
+
     [Header("Ammo")]
     [SerializeField] private Ammo currentAmmo;
     [SerializeField] private Ammo maxAmmo;
+
+    [SerializeField] private InventorySlotTypes[] inventroySlotType;
 
     [Header("Ammo Text")]
     [SerializeField] private TextMeshProUGUI PistolAmmoText;
@@ -35,6 +40,13 @@ public class PlayerInventory : MonoBehaviour
         // Creating List of Inventory
         InventoryList = new List<GameObject>();
 
+        // This is so scuffed HELP (consult sir)
+        inventroySlotType = new InventorySlotTypes[2]
+        {
+            InventorySlotTypes.PRIMARY,
+            InventorySlotTypes.SECONDARY
+        };
+
         // Setting to First Inventory Slot
         currentInventorySlot = 0;
 
@@ -48,21 +60,12 @@ public class PlayerInventory : MonoBehaviour
             InventoryList.Add(CurrentInverntoryPanel);
 
             // Equipping the Fists as the weapon (by default)
-            CurrentInverntoryPanel.GetComponent<InventoryPanel>().Init(i + 1, WeaponTypes.FIST, 0, currentAmmo.GetAmmo(WeaponTypes.FIST));
+            CurrentInverntoryPanel.GetComponent<InventoryPanel>().Init(inventroySlotType[i], i + 1, WeaponTypes.FIST, 0, currentAmmo.GetAmmo(WeaponTypes.FIST));
+            this.GetComponent<PlayerController>().EquipWeapon(PlayerFists, i);
         }
-
-        // Adding Weapons to some inventory slots
-        // Note to test the inventory... this is not part of the final build
-        InventoryList[0].GetComponent<InventoryPanel>().SetGunPrefab(WeaponTypes.PISTOL);
-        InventoryList[1].GetComponent<InventoryPanel>().SetGunPrefab(WeaponTypes.SHOTGUN);
-        InventoryList[2].GetComponent<InventoryPanel>().SetGunPrefab(WeaponTypes.SMG);
-        InventoryList[3].GetComponent<InventoryPanel>().SetGunPrefab(WeaponTypes.RPG);
 
         // Activate first inventory slot
         ActivateInventoryPanel(currentInventorySlot);
-
-        // Equip Gun
-        this.GetComponent<PlayerController>().EquipGun();
     }
 
     #region UI Functions
@@ -76,6 +79,7 @@ public class PlayerInventory : MonoBehaviour
         }
 
         ActivateInventoryPanel(currentInventorySlot);
+        this.GetComponent<PlayerController>().SwitchWeapon();
     }
 
     public void PrevGun()
@@ -88,6 +92,7 @@ public class PlayerInventory : MonoBehaviour
         }
 
         ActivateInventoryPanel(currentInventorySlot);
+        this.GetComponent<PlayerController>().SwitchWeapon();
     }
 
     private void ActivateInventoryPanel(int panelToActivate)
@@ -106,9 +111,11 @@ public class PlayerInventory : MonoBehaviour
     }
     #endregion
 
-    public void PickUpGun()
+    public void PickUpGun(WeaponTypes weapon, GameObject weaponPrefab)
     {
-        
+        InventoryList[currentInventorySlot].GetComponent<InventoryPanel>().SetGunPrefab(weapon);
+        this.GetComponent<PlayerController>().EquipWeapon(weaponPrefab, currentInventorySlot);
+        ActivateInventoryPanel(currentInventorySlot);
     }
 
     public void PickUpAmmo(WeaponTypes weaponType, int ammoGained)
@@ -126,9 +133,38 @@ public class PlayerInventory : MonoBehaviour
         }
 
         // Update Text
-        InventoryPanel currentInventoryProperties = GetCurrentInventoryPrefab().GetComponent<InventoryPanel>();
-        currentInventoryProperties.SetMaxAmmoText(currentAmmo.GetAmmo(currentInventoryProperties.GetWeaponType()));
+        ActivateInventoryPanel(currentInventorySlot);
         UpdateAmmoText();
+    }
+
+    public bool IsPickUpValid(WeaponTypes weapon)
+    {
+        InventorySlotTypes inventorySlotTypes = InventoryList[currentInventorySlot].GetComponent<InventoryPanel>().GetInventorySlotType();
+
+        switch (weapon) {
+            case WeaponTypes.FIST:
+                return true;
+
+            case WeaponTypes.PISTOL:
+                if (inventorySlotTypes == InventorySlotTypes.SECONDARY) return true;
+                else return false;
+
+            case WeaponTypes.SMG:
+                if (inventorySlotTypes == InventorySlotTypes.PRIMARY) return true;
+                else return false;
+
+            case WeaponTypes.SHOTGUN:
+                if (inventorySlotTypes == InventorySlotTypes.PRIMARY) return true;
+                else return false;
+
+            case WeaponTypes.RPG:
+                if (inventorySlotTypes == InventorySlotTypes.PRIMARY) return true;
+                else return false;
+
+            default:
+                Debug.LogWarning("Not an existing Gun");
+                return false;
+        }
     }
 
     public void UpdateAmmoText()
@@ -139,9 +175,9 @@ public class PlayerInventory : MonoBehaviour
         RPGAmmoText.text = currentAmmo.GetAmmo(WeaponTypes.RPG).ToString();
     }
 
-    public GameObject GetCurrentInventoryPrefab()
+    public int GetCurrentInventorySlot()
     {
-        return InventoryList[currentInventorySlot];
+        return currentInventorySlot;
     }
 
     [System.Serializable]

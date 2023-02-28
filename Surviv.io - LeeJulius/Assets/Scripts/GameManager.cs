@@ -33,7 +33,8 @@ public class GameManager : Singleton<GameManager>
         {
             float randomXSpawn = Random.Range(-mapSize.x, mapSize.x);
             float randomYSpawn = Random.Range(-mapSize.y, mapSize.y);
-            Instantiate(itemToSpawn, new Vector3(randomXSpawn, randomYSpawn, 0), Quaternion.identity);
+            GameObject itemSpawned = Instantiate(itemToSpawn, new Vector3(randomXSpawn, randomYSpawn, 0), Quaternion.identity);
+            itemSpawned.transform.parent = Map.transform;
         } 
     }
 

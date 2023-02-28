@@ -6,3 +6,9 @@ public enum WeaponTypes
     SHOTGUN,
     RPG
 }
+
+public enum InventorySlotTypes
+{
+    PRIMARY,
+    SECONDARY
+}
