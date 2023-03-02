@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private GameObject BulletPrefab;
     [SerializeField] private int speed;
+    private Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = this.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.transform.position = Vector3.up * speed * Time.deltaTime;
+        rb.velocity = transform.right * speed;
     }
 }

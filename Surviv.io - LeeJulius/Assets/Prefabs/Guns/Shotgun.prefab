@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2038792498986675999}
   - component: {fileID: 1862251739179213952}
+  - component: {fileID: 8931737438405498609}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -70,7 +71,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0.509434, g: 0.2816874, b: 0.15619439, a: 1}
   m_FlipX: 0
@@ -82,3 +83,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8931737438405498609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7756408220398978867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 569672460ca993f4dac8189f5374a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 8235986163130599105, guid: 275016d1649fa0d42abc21c0884f1dd9, type: 3}
+  currentClip: 0
+  maxClip: 2
+  weaponType: 3
+  isBurst: 0
+  hasSpread: 0
+  dmg: 0
+  reloadSpeed: 2

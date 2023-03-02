@@ -7,9 +7,9 @@ public class GunPickup : MonoBehaviour
     [SerializeField] private GameObject WeaponPrefab;
     [SerializeField] private WeaponTypes weapon;
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.collider.name.StartsWith("Player"))
+        if (other.name.StartsWith("Player"))
         {
             PlayerInventory platerInventory = other.gameObject.GetComponent<PlayerInventory>();
 

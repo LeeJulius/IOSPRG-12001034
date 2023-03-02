@@ -12,18 +12,24 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Rotation")]
     [SerializeField] private float rotationalSpeed;
-    [SerializeField] private GameObject PlayerHands;
+    
     float rotation;
 
     [Header("RigidBody")]
     private Rigidbody2D rb;
 
-    [Header("Player Guns")]
-    [SerializeField]private List<GameObject> EquipableItems;
+    [Header("Player Default Weapon")]
+    [SerializeField] private GameObject WeaponSpawnLocation;
+    [SerializeField] private GameObject PlayerFists;
+
+    [Header("Other Components")]
+    private PlayerInventoryPanelManager playerInventoryPanelManager;
+    private PlayerInventory playerInventory;
 
     private void Start()
     {
-        EquipableItems = new List<GameObject>();
+        playerInventoryPanelManager = this.GetComponent<PlayerInventoryPanelManager>();
+        playerInventory = this.GetComponent<PlayerInventory>();
 
         // Attaching rb to Player
         rb = this.GetComponent<Rigidbody2D>();
@@ -35,7 +41,7 @@ public class PlayerController : MonoBehaviour
         rb.position += new Vector2(speedX, speedY) * Time.deltaTime;
 
         // Changing Aim (Rotating)
-        PlayerHands.transform.Rotate(new Vector3(0, 0, 1), rotation);
+        WeaponSpawnLocation.transform.Rotate(new Vector3(0, 0, 1), rotation);
     }
 
     #region Movement Functions
@@ -57,57 +63,69 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Inventory Functions
-    public void SwitchWeapon()
-    {
-        // Unequiping all weapons
-        foreach(GameObject equipabbleWeapons in EquipableItems)
-        {
-            equipabbleWeapons.SetActive(false);
-        }
-
-        // Getting weapon to currently equip
-        PlayerInventory playerInventory = this.GetComponent<PlayerInventory>();
-        int currentInventorySlot = playerInventory.GetCurrentInventorySlot();
-
-        Debug.Log(currentInventorySlot);
-
-        // Equip Weapon
-        EquipableItems[currentInventorySlot].SetActive(true);
-    }
-
-    public void EquipWeapon(GameObject gunToEquip, int inventorySlot)
-    {
-        GameObject CurrentGun = Instantiate(gunToEquip, PlayerHands.transform);
-        CurrentGun.transform.parent = PlayerHands.transform;
-
-        if (EquipableItems.Count <= inventorySlot)
-        {
-            
-            EquipableItems.Add(CurrentGun);
-        }
-        else
-        {
-            Destroy(EquipableItems[inventorySlot]);
-            EquipableItems.RemoveAt(inventorySlot);
-            EquipableItems.Insert(inventorySlot, CurrentGun);
-        }
-
-        SwitchWeapon();
-    }
-
-    #endregion
-
     #region Gun Functions
-    public void ShootGun()
+    public void UseWeapon()
     {
         // Getting weapon to currently equip
+        int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
+        
+        // Equip Weapon
+        GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
+        int currentClip = currentGun.GetComponent<GunComponent>().GetCurrentClip();
 
-        PlayerInventory playerInventory = this.GetComponent<PlayerInventory>();
-        int currentInventorySlot = playerInventory.GetCurrentInventorySlot();
+        if (currentClip <= 0)
+            return;
+
+        currentGun.GetComponent<GunComponent>().Shoot(WeaponSpawnLocation.transform);
+        currentGun.GetComponent<GunComponent>().SetCurrentClip(currentClip - 1);
+
+        // Update Text
+        playerInventoryPanelManager.UpdatePanelInformation();
+        playerInventory.ChangeWeapon(currentInventorySlot);
+    }
+
+    public void OnReloadButtonClick()
+    {
+        StartCoroutine(ReloadGun());
+    }
+
+    public IEnumerator ReloadGun()
+    {
+        // Getting weapon to currently equip
+        int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
+        GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
+
+        WeaponTypes weapon = currentGun.GetComponent<GunComponent>().GetWeaponTypes();
+        int currentClip = currentGun.GetComponent<GunComponent>().GetCurrentClip();
+        int maxClip = currentGun.GetComponent<GunComponent>().GetMaxClip();
+
+        int currentAmmo = playerInventory.GetCurrentAmmo(weapon);
+
+        // Cancel Reload if Fully Reloaded
+        if (currentClip >= maxClip)
+        {
+            yield break;
+        }
+            
+        int ammoNeeded = maxClip - currentClip;
+
+        if (ammoNeeded > currentAmmo)
+        {
+            ammoNeeded = currentAmmo;
+        }
 
         // Equip Weapon
-        EquipableItems[currentInventorySlot].GetComponent<GunComponent>();
+        yield return StartCoroutine(currentGun.GetComponent<GunComponent>().Reload(ammoNeeded));
+        playerInventory.SetCurrentAmmo(weapon, playerInventory.GetCurrentAmmo(weapon) - ammoNeeded);
+
+        // Update Text
+        playerInventoryPanelManager.UpdatePanelInformation();
+        playerInventory.ChangeWeapon(currentInventorySlot);
     }
     #endregion
+
+    public GameObject GetPlayerFists()
+    {
+        return PlayerFists;
+    }
 }

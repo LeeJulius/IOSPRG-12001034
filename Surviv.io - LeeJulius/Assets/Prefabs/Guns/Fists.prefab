@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 11761300839590555}
   - component: {fileID: 4008746383586194397}
   m_Layer: 0
-  m_Name: Circle (2)
+  m_Name: RHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.7830189, g: 0.7374706, b: 0.6463599, a: 1}
   m_FlipX: 0
@@ -91,6 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4389702260415269251}
+  - component: {fileID: -1389959563659958096}
   m_Layer: 0
   m_Name: Fists
   m_TagString: Untagged
@@ -114,6 +115,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1389959563659958096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4389702260415269248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 569672460ca993f4dac8189f5374a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 0}
+  currentClip: 0
+  maxClip: 0
+  weaponType: 0
+  isBurst: 0
+  hasSpread: 0
+  dmg: 0
+  reloadSpeed: 0
 --- !u!1 &7541044046218912529
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +146,7 @@ GameObject:
   - component: {fileID: 2653310563058588801}
   - component: {fileID: 4598905346799096026}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: LHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,7 +205,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 0.7830189, g: 0.7374706, b: 0.6463599, a: 1}
   m_FlipX: 0

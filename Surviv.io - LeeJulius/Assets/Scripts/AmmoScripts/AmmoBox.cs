@@ -7,10 +7,10 @@ public class AmmoBox : MonoBehaviour
     [SerializeField] protected int ammo;
     [SerializeField] protected WeaponTypes weapon;
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         // If Ammo Box collided with Player
-        if (other.collider.name.StartsWith("Player"))
+        if (other.name.StartsWith("Player"))
         {
             // Pickup Ammo Box
             PlayerInventory playerInventory = other.gameObject.GetComponent<PlayerInventory>();

@@ -5,31 +5,71 @@ using UnityEngine;
 public class GunComponent : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] GameObject BulletPrefab;
-
-    [Header("Fire Location")]
-    [SerializeField] GameObject FireLocation;
+    [SerializeField] private GameObject BulletPrefab;
 
     [Header("Gun Ammo")]
-    [SerializeField] int currentAmmo;
-    [SerializeField] int maxClip;
-    [SerializeField] int maxAmmo;
+    [SerializeField]private int currentClip;
+    [SerializeField] private int maxClip;
 
     [Header("Gun Properties")]
-    [SerializeField] bool isBurst;
-    [SerializeField] bool hasSpread;
-    [SerializeField] int dmg;
+    [SerializeField] private WeaponTypes weaponType;
+    [SerializeField] private bool isBurst;
+    [SerializeField] private bool hasSpread;
+    [SerializeField] private int dmg;
 
     [Header("Relod Clip")]
-    [SerializeField] float reloadSpeed;
+    [SerializeField] private float reloadSpeed;
+    private bool isReloading;
 
-    public virtual void Shoot()
+    private void Start()
     {
-        Instantiate(BulletPrefab, FireLocation.transform);
+
     }
 
-    public virtual void Reload()
+    public virtual void Shoot(Transform bulletRotation)
     {
+        Instantiate(BulletPrefab, bulletRotation.transform.position, bulletRotation.transform.rotation);
+    }
 
+    public virtual IEnumerator Reload(int ammoGained)
+    {
+        isReloading = true;
+
+        Debug.Log("Ammo: " + ammoGained);
+
+        yield return new WaitForSecondsRealtime(reloadSpeed);
+
+        Debug.Log("Done Reloading");
+
+        currentClip += ammoGained;
+
+        isReloading = false;
+
+        Debug.Log("Current Ammo: " + currentClip);
+    }
+
+    public int GetMaxClip()
+    {
+        return maxClip;
+    }
+
+    public int GetCurrentClip()
+    {
+        return currentClip;
+    }
+
+    public void SetCurrentClip(int _currentClip)
+    {
+        currentClip = _currentClip;
+    }
+
+    public bool GetIsReloading()
+    {
+        return isReloading;
+    }
+
+    public WeaponTypes GetWeaponTypes()
+    {
+        return weaponType;
     }
 }

@@ -17,13 +17,25 @@ public class InventoryPanel : MonoBehaviour
 
     [Header("Gun")]
     [SerializeField] private List<GameObject> GunPrefab;
-    private WeaponTypes weaponEquipped;
 
     public void Init(InventorySlotTypes _inventorySlotType, int panelNumber, WeaponTypes weaponType, int currentAmmo, int maxAmmo)
     {
+        // Setting Inventory Slot Information
         inventorySlotType = _inventorySlotType;
         SetPanelNumberText(panelNumber);
+
+        // Setting Inventory Gun
         SetGunPrefab(weaponType);
+
+        // Setting Inventory Slot Ammo
+        SetCurrentAmmoText(currentAmmo);
+        SetMaxAmmoText(maxAmmo);
+    }
+
+    public void UpdatePanel(WeaponTypes weaponType, int currentAmmo, int maxAmmo)
+    {
+        SetGunPrefab(weaponType);
+
         SetCurrentAmmoText(currentAmmo);
         SetMaxAmmoText(maxAmmo);
     }
@@ -43,12 +55,10 @@ public class InventoryPanel : MonoBehaviour
             default:
                 Debug.LogWarning("No Avaiable Inventory Slot Type");
                 break;
-        }
-
-        
+        }      
     }
 
-    private void SetCurrentAmmoText(int currentAmmo)
+    public void SetCurrentAmmoText(int currentAmmo)
     {
         CurrentAmmoText.text = currentAmmo.ToString();
     }
@@ -60,8 +70,6 @@ public class InventoryPanel : MonoBehaviour
 
     public void SetGunPrefab(WeaponTypes weapon)
     {
-        weaponEquipped = weapon;
-
         foreach (GameObject CurrentGunPrefab in GunPrefab)
         {
             CurrentGunPrefab.SetActive(false);
@@ -93,12 +101,6 @@ public class InventoryPanel : MonoBehaviour
                 Debug.LogError("No Selected Weapon");
                 break;
         }
-    }
-
-    // sus
-    public WeaponTypes GetWeaponType()
-    {
-        return weaponEquipped;
     }
 
     public InventorySlotTypes GetInventorySlotType()

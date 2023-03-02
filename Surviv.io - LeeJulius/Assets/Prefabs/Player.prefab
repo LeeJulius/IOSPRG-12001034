@@ -70,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 1, g: 0.8843673, b: 0.6839622, a: 1}
   m_FlipX: 0
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4981933638775388350}
   m_Layer: 0
-  m_Name: PlayerHands
+  m_Name: PlayerWeaponLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,9 +122,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3761169893443858135}
   - component: {fileID: 3761169893443858132}
+  - component: {fileID: 1377274369}
+  - component: {fileID: 3980615275449696709}
   - component: {fileID: 3761169893443858133}
   - component: {fileID: 8665268484858131855}
-  - component: {fileID: 1377274369}
+  - component: {fileID: 2446475239511119437}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -164,8 +166,51 @@ MonoBehaviour:
   horizontalSpeed: 0.2
   verticalSpeed: 0.2
   rotationalSpeed: 2
-  PlayerHands: {fileID: 2654269101299537063}
-  EquipableItems: []
+  WeaponSpawnLocation: {fileID: 2654269101299537063}
+  PlayerFists: {fileID: 4389702260415269248, guid: 45af7a2fd294c09418e2325a9aee5138, type: 3}
+--- !u!114 &1377274369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3761169893443858137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79b03c0f8d2660478b949fd92aac608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAmmo:
+    pistolAmmo: 0
+    smgAmmo: 0
+    shotgunAmmo: 0
+    rpgAmmo: 0
+  maxAmmo:
+    pistolAmmo: 90
+    smgAmmo: 120
+    shotgunAmmo: 60
+    rpgAmmo: 5
+  WeaponSpawnLocation: {fileID: 0}
+--- !u!114 &3980615275449696709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3761169893443858137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38ffa3843f7b6c94f9054c004833a473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventorySize: 2
+  InventorySlotPanel: {fileID: 3935448010822242919, guid: 55317e0236357af40a9b22fcd3c00a1e, type: 3}
+  InventorySlotLocation: {fileID: 0}
+  PistolAmmoText: {fileID: 0}
+  SMGAmmoText: {fileID: 0}
+  ShotgunAmmoText: {fileID: 0}
+  RPGAmmoText: {fileID: 0}
+  inventroySlotType: 0000000001000000
 --- !u!50 &3761169893443858133
 Rigidbody2D:
   serializedVersion: 4
@@ -203,36 +248,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.25
---- !u!114 &1377274369
-MonoBehaviour:
+--- !u!58 &2446475239511119437
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3761169893443858137}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e79b03c0f8d2660478b949fd92aac608, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventorySize: 2
-  InventorySlotPanel: {fileID: 3935448010822242919, guid: 55317e0236357af40a9b22fcd3c00a1e, type: 3}
-  InventorySlotLocation: {fileID: 0}
-  PlayerFists: {fileID: 4389702260415269248, guid: 45af7a2fd294c09418e2325a9aee5138, type: 3}
-  currentAmmo:
-    pistolAmmo: 0
-    smgAmmo: 0
-    shotgunAmmo: 0
-    rpgAmmo: 0
-  maxAmmo:
-    pistolAmmo: 90
-    smgAmmo: 120
-    shotgunAmmo: 60
-    rpgAmmo: 5
-  PistolAmmoText: {fileID: 0}
-  SMGAmmoText: {fileID: 0}
-  ShotgunAmmoText: {fileID: 0}
-  RPGAmmoText: {fileID: 0}
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.3
 --- !u!1 &3761169894583773442
 GameObject:
   m_ObjectHideFlags: 0
