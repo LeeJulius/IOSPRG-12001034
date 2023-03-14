@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1935104401639091880}
   - component: {fileID: 1519327917646223787}
-  - component: {fileID: -5034495044436208040}
+  - component: {fileID: 3705677639608773187}
   m_Layer: 0
   m_Name: SMG
   m_TagString: Untagged
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.3962264, g: 0.29343182, b: 0.29343182, a: 1}
+  m_Color: {r: 0.20000002, g: 0.20000002, b: 0.20000002, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-5034495044436208040
+--- !u!114 &3705677639608773187
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +92,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255177729466818769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 569672460ca993f4dac8189f5374a5da, type: 3}
+  m_Script: {fileID: 11500000, guid: bda8a3dfbf0e4fd43913d3f86b1b59eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 8235986163130599105, guid: 275016d1649fa0d42abc21c0884f1dd9, type: 3}
-  currentClip: 0
-  maxClip: 40
+  maxClip: 30
   weaponType: 2
-  isBurst: 0
-  hasSpread: 0
-  dmg: 0
+  dmg: 10
+  isInfiniteAmmo: 0
   reloadSpeed: 2
+  isAutomatic: 1
+  fireRate: 0.1
+  minSpreadShot: -1
+  maxSpreadShot: 2

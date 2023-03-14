@@ -3,31 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// Rename to player inventory manager
-
-// Note to professional ape lord
-
-/*
-======================================================================================
-1. When Shooting/Reloading/Picking Up Ammo take note of the following:
-
-Ammo Texts (Top Right) = Pistol, SMG, Shotgun, RPG [This should be unreloaded ammo] (mostly for reloading imo)
-
-Inventory Panel (Bottom Middle)
- - How much ammo gun has (in the magazine)
- - Total Ammo [Unreloaded ammo]
- - Selecting correct Gun Panel
-======================================================================================
-2. When Switching Guns (wether panel or switch pick up)/ Picking up Guns take note of the following:
-
-Changing Prefabs of Gun
-
-Inventory Panel (Bottom Middle)
- - How much ammo gun has (in the magazine)
- - Total Ammo [Unreloaded ammo]
- - Selecting correct Gun Panel
-*/
-
 public class PlayerInventoryPanelManager : MonoBehaviour
 {
     [Header("Inventory Size")]
@@ -45,7 +20,7 @@ public class PlayerInventoryPanelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ShotgunAmmoText;
     [SerializeField] private TextMeshProUGUI RPGAmmoText;
 
-    // Ask sir cuz this is so hard coded lmao
+    // Ask sir cuz this is so hard coded lmao (answer can be struct)
     [Header("Inventory Type")]
     [SerializeField] private InventorySlotTypes[] inventroySlotType = new InventorySlotTypes[2]
         {
@@ -83,7 +58,7 @@ public class PlayerInventoryPanelManager : MonoBehaviour
 
             // Equipping the Fists as the weapon (by default)
             CurrentInverntoryPanel.GetComponent<InventoryPanel>().Init(inventroySlotType[i], i + 1, WeaponTypes.FIST, 0, 0);
-            playerInventory.EquipWeapon(playerController.GetPlayerFists(), i);
+            playerInventory.EquipWeapon(playerController.PlayerFists, i);
         }
 
         // Activate first inventory slot
@@ -124,9 +99,9 @@ public class PlayerInventoryPanelManager : MonoBehaviour
         InventoryPanel currentPanel = InventoryPanelList[currentInventorySlot].GetComponent<InventoryPanel>();     
         GunComponent currentGun = playerInventory.GetCurrentItem(currentInventorySlot).GetComponent<GunComponent>();
 
-        WeaponTypes currentWeaponType = currentGun.GetWeaponTypes();
+        WeaponTypes currentWeaponType = currentGun.WeaponType;
 
-        int currentClipAmmo = currentGun.GetCurrentClip();
+        int currentClipAmmo = currentGun.CurrentClip;
         int gunAmmo = playerInventory.GetCurrentAmmo(currentWeaponType);
         
 
@@ -142,7 +117,6 @@ public class PlayerInventoryPanelManager : MonoBehaviour
         UpdateAmmoText();
     }
 
-    // Ammo Counter
     public void UpdateAmmoText()
     {
         PistolAmmoText.text = playerInventory.GetCurrentAmmo(WeaponTypes.PISTOL).ToString();

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4013727554995164819}
   - component: {fileID: 7498441062860295882}
-  - component: {fileID: -4447586734283512548}
+  - component: {fileID: 1271252126605734950}
   m_Layer: 0
   m_Name: RPG
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-4447586734283512548
+--- !u!114 &1271252126605734950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,11 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 569672460ca993f4dac8189f5374a5da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 8235986163130599105, guid: 275016d1649fa0d42abc21c0884f1dd9, type: 3}
-  currentClip: 0
-  maxClip: 0
-  weaponType: 4
-  isBurst: 0
-  hasSpread: 0
+  BulletPrefab: {fileID: 0}
+  maxClip: 1
+  weaponType: 0
   dmg: 0
   reloadSpeed: 0

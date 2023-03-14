@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2038792498986675999}
   - component: {fileID: 1862251739179213952}
-  - component: {fileID: 8931737438405498609}
+  - component: {fileID: -5576992436700551376}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8931737438405498609
+--- !u!114 &-5576992436700551376
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +92,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7756408220398978867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 569672460ca993f4dac8189f5374a5da, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c34b34bf4af90e46ac44b5ebcfab909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 8235986163130599105, guid: 275016d1649fa0d42abc21c0884f1dd9, type: 3}
-  currentClip: 0
-  maxClip: 2
+  maxClip: 4
   weaponType: 3
-  isBurst: 0
-  hasSpread: 0
-  dmg: 0
+  dmg: 20
   reloadSpeed: 2
+  shotgunBullets: 8
+  minSpreadShot: -10
+  maxSpreadShot: 10

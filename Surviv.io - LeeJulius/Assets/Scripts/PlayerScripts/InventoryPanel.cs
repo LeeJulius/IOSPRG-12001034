@@ -75,7 +75,6 @@ public class InventoryPanel : MonoBehaviour
             CurrentGunPrefab.SetActive(false);
         }
 
-        // Applying weapons to the UI 
         switch (weapon)
         {
             case WeaponTypes.FIST:

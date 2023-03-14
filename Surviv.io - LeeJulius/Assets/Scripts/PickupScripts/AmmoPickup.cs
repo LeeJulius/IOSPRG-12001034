@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoBox : MonoBehaviour
+public class AmmoPickup : MonoBehaviour
 {
     [SerializeField] protected int ammo;
     [SerializeField] protected WeaponTypes weapon;

@@ -5,127 +5,104 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Speed")]
-    [SerializeField] private float horizontalSpeed;
-    [SerializeField] private float verticalSpeed;
-    float speedX;
-    float speedY;
+    [SerializeField] private Joystick movementJoystick;
+    [SerializeField] private float speed;
 
     [Header("Player Rotation")]
-    [SerializeField] private float rotationalSpeed;
-    
-    float rotation;
+    [SerializeField] private Joystick rotationJoystick;
 
     [Header("RigidBody")]
     private Rigidbody2D rb;
 
-    [Header("Player Default Weapon")]
-    [SerializeField] private GameObject WeaponSpawnLocation;
-    [SerializeField] private GameObject PlayerFists;
+    [Header("Player Weapons")]
+    [SerializeField] private GameObject weaponSpawnLocation;
+    [SerializeField] private GameObject playerFists;
 
-    [Header("Other Components")]
+    [Header("PlayerInventory")]
     private PlayerInventoryPanelManager playerInventoryPanelManager;
     private PlayerInventory playerInventory;
+
+    [Header("Player Shoot")]
+    private bool shootButtonPressed;
 
     private void Start()
     {
         playerInventoryPanelManager = this.GetComponent<PlayerInventoryPanelManager>();
         playerInventory = this.GetComponent<PlayerInventory>();
 
-        // Attaching rb to Player
         rb = this.GetComponent<Rigidbody2D>();
+
+        shootButtonPressed = false;
     }
 
     private void FixedUpdate()
     {
         // Changing Player (Position)
-        rb.position += new Vector2(speedX, speedY) * Time.deltaTime;
+        if (movementJoystick.GetComponent<Joystick>().JoyStickTouched)
+            rb.position += movementJoystick.GetDirection() * speed * Time.deltaTime;
 
         // Changing Aim (Rotating)
-        WeaponSpawnLocation.transform.Rotate(new Vector3(0, 0, 1), rotation);
+        if (!float.IsNaN(rotationJoystick.GetRotation()) && rotationJoystick.GetComponent<Joystick>().JoyStickTouched)
+            weaponSpawnLocation.transform.eulerAngles = new Vector3(0, 0, rotationJoystick.GetRotation());
     }
 
-    #region Movement Functions
-    public void HorizontalMovement(int direction)
+    #region Shooting Functions
+    public void OnShootButtonPressed()
     {
-        speedX = direction * horizontalSpeed;
+        shootButtonPressed = true;
+
+        if (!CurrentGunProperties().IsReloading && CurrentGunProperties().CurrentClip > 0)
+            StartCoroutine(PlayerShootGun());
     }
 
-    public void VerticalMovement(int direction)
+    public void OnShootButtonReleased()
     {
-        speedY = direction * verticalSpeed;
+        shootButtonPressed = false;
     }
-    #endregion
 
-    #region Aim Functions
-    public void RotateGun(int direction)
+    private IEnumerator PlayerShootGun()
     {
-        rotation = direction * rotationalSpeed;
-    }
-    #endregion
-
-    #region Gun Functions
-    public void UseWeapon()
-    {
-        // Getting weapon to currently equip
-        int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
-        
-        // Equip Weapon
-        GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
-        int currentClip = currentGun.GetComponent<GunComponent>().GetCurrentClip();
-
-        if (currentClip <= 0)
-            return;
-
-        currentGun.GetComponent<GunComponent>().Shoot(WeaponSpawnLocation.transform);
-        currentGun.GetComponent<GunComponent>().SetCurrentClip(currentClip - 1);
-
-        // Update Text
+        yield return StartCoroutine(CurrentGunProperties().Shoot(weaponSpawnLocation.transform));
         playerInventoryPanelManager.UpdatePanelInformation();
-        playerInventory.ChangeWeapon(currentInventorySlot);
-    }
 
+        yield return new WaitForSecondsRealtime(CurrentGunProperties().FireRate);
+
+        if (shootButtonPressed && CurrentGunProperties().IsAutomatic && CurrentGunProperties().CurrentClip > 0)
+            yield return StartCoroutine(PlayerShootGun());
+    }
+    #endregion
+
+    #region Reloading Functions
     public void OnReloadButtonClick()
     {
-        StartCoroutine(ReloadGun());
+        if (!CurrentGunProperties().IsReloading && CurrentGunProperties().CurrentClip <= CurrentGunProperties().MaxClip)
+            StartCoroutine(ReloadGun());
     }
 
     public IEnumerator ReloadGun()
     {
-        // Getting weapon to currently equip
-        int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
-        GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
-
-        WeaponTypes weapon = currentGun.GetComponent<GunComponent>().GetWeaponTypes();
-        int currentClip = currentGun.GetComponent<GunComponent>().GetCurrentClip();
-        int maxClip = currentGun.GetComponent<GunComponent>().GetMaxClip();
-
-        int currentAmmo = playerInventory.GetCurrentAmmo(weapon);
-
-        // Cancel Reload if Fully Reloaded
-        if (currentClip >= maxClip)
-        {
-            yield break;
-        }
-            
-        int ammoNeeded = maxClip - currentClip;
+        int currentAmmo = playerInventory.GetCurrentAmmo(CurrentGunProperties().WeaponType);
+        int ammoNeeded = CurrentGunProperties().MaxClip - CurrentGunProperties().CurrentClip;
 
         if (ammoNeeded > currentAmmo)
-        {
             ammoNeeded = currentAmmo;
-        }
 
         // Equip Weapon
-        yield return StartCoroutine(currentGun.GetComponent<GunComponent>().Reload(ammoNeeded));
-        playerInventory.SetCurrentAmmo(weapon, playerInventory.GetCurrentAmmo(weapon) - ammoNeeded);
+        yield return StartCoroutine(CurrentGunProperties().Reload(ammoNeeded));
+        playerInventory.SetCurrentAmmo(CurrentGunProperties().WeaponType, playerInventory.GetCurrentAmmo(CurrentGunProperties().WeaponType) - ammoNeeded);
 
         // Update Text
         playerInventoryPanelManager.UpdatePanelInformation();
-        playerInventory.ChangeWeapon(currentInventorySlot);
+        playerInventory.ChangeWeapon(playerInventoryPanelManager.GetCurrentInventorySlot());
     }
     #endregion
 
-    public GameObject GetPlayerFists()
-    {
-        return PlayerFists;
+    private GunComponent CurrentGunProperties()
+    { 
+        int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
+        GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
+        return currentGun.GetComponent<GunComponent>();
     }
+
+    public GameObject PlayerFists { get { return playerFists; } }
 }

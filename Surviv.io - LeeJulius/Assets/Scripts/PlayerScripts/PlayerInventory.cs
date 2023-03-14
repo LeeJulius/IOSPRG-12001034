@@ -44,21 +44,19 @@ public class PlayerInventory : MonoBehaviour
 
     public void PickUpGun(WeaponTypes weapon, GameObject weaponPrefab)
     {
-        playerInventoryPanelManager.UpdatePanelInformation();
         EquipWeapon(weaponPrefab, playerInventoryPanelManager.GetCurrentInventorySlot());
+        playerInventoryPanelManager.UpdatePanelInformation();
     }
 
     public void PickUpAmmo(WeaponTypes weaponType, int ammoGained)
     {
-        // Check if Ammo will be filled
+        // Fll up Ammo
         if (currentAmmo.GetAmmo(weaponType) + ammoGained > maxAmmo.GetAmmo(weaponType))
         {
-            // Normalize Ammo (to make it not go over the total ammo)
             currentAmmo.SetAmmo(weaponType, maxAmmo.GetAmmo(weaponType));
         }
         else
         {
-            // Add Ammo
             currentAmmo.SetAmmo(weaponType, currentAmmo.GetAmmo(weaponType) + ammoGained);
         }
 
@@ -110,80 +108,7 @@ public class PlayerInventory : MonoBehaviour
     }
     #endregion
 
-    [System.Serializable]
-    protected class Ammo
-    {
-        [SerializeField] private int pistolAmmo;
-        [SerializeField] private int smgAmmo;
-        [SerializeField] private int shotgunAmmo;
-        [SerializeField] private int rpgAmmo;
-
-        // Getters
-        public int GetAmmo(WeaponTypes weapon)
-        {
-            switch (weapon)
-            {
-                case WeaponTypes.FIST:
-                    return 0;
-
-                case WeaponTypes.PISTOL:
-                    return pistolAmmo;
-
-                case WeaponTypes.SMG:
-                    return smgAmmo;
-
-                case WeaponTypes.SHOTGUN:
-                    return shotgunAmmo;
-
-                case WeaponTypes.RPG:
-                    return rpgAmmo;
-
-                default:
-                    Debug.LogError("No Available Weapon");
-                    return 0;
-            }
-        }
-
-        // Setters
-        public void SetAmmo(WeaponTypes weapon, int ammo)
-        {
-            switch (weapon)
-            {
-                case WeaponTypes.PISTOL:
-                    pistolAmmo = ammo;
-                    break;
-
-                case WeaponTypes.SMG:
-                    smgAmmo = ammo;
-                    break;
-
-                case WeaponTypes.SHOTGUN:
-                    shotgunAmmo = ammo;
-                    break;
-
-                case WeaponTypes.RPG:
-                    rpgAmmo = ammo;
-                    break;
-
-                default:
-                    Debug.LogError("No Available Weapon");
-                    break;
-            }
-        }
-    }
-
-    public int GetCurrentAmmo(WeaponTypes weapon)
-    {
-        return currentAmmo.GetAmmo(weapon);
-    }
-
-    public void SetCurrentAmmo(WeaponTypes weapon, int remainingAmmo)
-    {
-        currentAmmo.SetAmmo(weapon, remainingAmmo);
-    }
-
-    public GameObject GetCurrentItem(int currentIndex)
-    {
-        return Weapons[currentIndex];
-    }
+    public int GetCurrentAmmo(WeaponTypes weapon) { return currentAmmo.GetAmmo(weapon); }
+    public void SetCurrentAmmo(WeaponTypes weapon, int remainingAmmo) { currentAmmo.SetAmmo(weapon, remainingAmmo); }
+    public GameObject GetCurrentItem(int currentIndex) { return Weapons[currentIndex]; }
 }
