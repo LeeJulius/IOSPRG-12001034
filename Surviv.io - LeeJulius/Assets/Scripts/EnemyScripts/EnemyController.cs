@@ -2,25 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : UnitController
 {
     private EnemyStateManager enemyStateManager;
 
-    [SerializeField] private GameObject enemyWeaponLocation;
-    [SerializeField] private int speed;
     private List<GameObject> targets;
     private GameObject equippedGun;
     private Vector2 direction;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         enemyStateManager = GetComponent<EnemyStateManager>();
         targets = new List<GameObject>();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        // bug trying to target other enemies
         if (collision.name.StartsWith("Player") || collision.name.StartsWith("Enemy"))
         {
             targets.Add(collision.gameObject);
@@ -40,9 +38,12 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+    protected override void Death()
+    {
+        MainGameManager.instance.UpdateEnemiesAlive(gameObject);
+        Destroy(gameObject);
+    }
 
-    public int Speed { get { return speed; } }
-    public GameObject EnemyWeaponLocation { get { return enemyWeaponLocation; } }
     public List<GameObject> Targets { get { return targets; } }
     public GameObject EquippedGun { get { return equippedGun; } set { equippedGun = value; } }
     public Vector2 Direction { get { return direction; } set { direction = value; } }

@@ -1,75 +1,81 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    [Header("Map")]
-    [SerializeField] private GameObject Map;
-    private Vector3 mapSize;
-
-    [Header("Spawn Objects Information")]
-    [SerializeField] private SpawnObjectData[] Objects;
-
-    [Header("Spawn Enemy Information")]
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private GameObject[] enemyGuns;
-    [SerializeField] private int enemySpawnAmount;
-
     private void Start()
     {
-        // Setting World Bounds
-        mapSize = Map.GetComponent<SpriteRenderer>().bounds.size;
-        mapSize /= 2;
-
-        // Spawn Objects
-        for (int i = 0; i < Objects.Length; i++)
-        {
-            SpawnObjects(Objects[i].GetItemToSpawn(), Objects[i].GetMinSpawnAmount(), Objects[i].GetMaxSpawnAmount());
-        }
-
-        SpawnEnemy(enemyPrefab, enemyGuns, enemySpawnAmount);
+        StartCoroutine(AsyncLoadScene("Menu", OnMenuLoaded));
     }
 
-    private void SpawnObjects(GameObject itemToSpawn, int minSpawnAmount, int maxSpawnAmount)
+    IEnumerator AsyncLoadScene(string name, Action OnCallBack = null)
     {
-        int spawnAmount = Random.Range(minSpawnAmount, maxSpawnAmount);
+        AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
 
-        for (int i = 0; i < spawnAmount; i++)
+        while (!asyncLoadScene.isDone)
+            yield return null;
+
+        if (OnCallBack != null)
         {
-            float randomXSpawn = Random.Range(-mapSize.x, mapSize.x);
-            float randomYSpawn = Random.Range(-mapSize.y, mapSize.y);
-            GameObject itemSpawned = Instantiate(itemToSpawn, new Vector3(randomXSpawn, randomYSpawn, 0), Quaternion.identity);
-            itemSpawned.transform.parent = Map.transform;
-        } 
-    }
-
-    private void SpawnEnemy(GameObject enemyPrefab, GameObject[] enemyGuns, int spawnAmount)
-    {
-        for (int i = 0; i < spawnAmount; i++)
-        {
-            int randomGun = Random.Range(0, enemyGuns.Length);
-
-            float randomXSpawn = Random.Range(-mapSize.x, mapSize.x);
-            float randomYSpawn = Random.Range(-mapSize.y, mapSize.y);
-
-            GameObject enemySpawned = Instantiate(enemyPrefab, new Vector3(randomXSpawn, randomYSpawn, 0), Quaternion.identity);
-            Transform weaponSpawnLocation = enemySpawned.GetComponent<EnemyController>().EnemyWeaponLocation.transform;
-
-            GameObject equippedGun = Instantiate(enemyGuns[randomGun], weaponSpawnLocation);
-            enemySpawned.GetComponent<EnemyController>().EquippedGun = equippedGun;
+            Debug.Log("Scene Loaded");
+            OnCallBack.Invoke();
         }
     }
 
-    [System.Serializable]
-    private struct SpawnObjectData
+    void AsyncDeloadScene(string name)
     {
-        [SerializeField] private GameObject itemToSpawn;
-        [SerializeField] private int minObjectSpawnAmount;
-        [SerializeField] private int maxObjectSpawnAmount;
+        SceneManager.UnloadSceneAsync(name);
+    }
 
-        public GameObject GetItemToSpawn() { return itemToSpawn; }
-        public int GetMinSpawnAmount() { return minObjectSpawnAmount; }
-        public int GetMaxSpawnAmount() { return maxObjectSpawnAmount; }
+    private void OnMenuLoaded()
+    {
+        MenuManager.instance.ShowCanvas(MenuTypes.MAIN_SCREEN);
+    }
+
+    public void StartGame()
+    {
+        MenuManager.instance.HideAll();
+        StartCoroutine(AsyncLoadScene("MainGame", OnMapLoaded));
+    }
+
+    private void OnMapLoaded()
+    {
+        SpawnMap();
+        MainGameManager.instance.StartGame();
+    }
+
+    public void EndGame(GameResult _gameResult)
+    {
+        AsyncDeloadScene("MainGame");
+        OnGameEnd(_gameResult);
+    } 
+
+    private void OnGameEnd(GameResult _gameResult)
+    {
+        if (_gameResult == GameResult.PLAYER_WIN)
+        {
+            MenuManager.instance.ShowCanvas(MenuTypes.WIN_GAME);
+        }
+        else if (_gameResult == GameResult.ENEMY_WIN)
+        {
+            MenuManager.instance.ShowCanvas(MenuTypes.GAME_OVER);
+        }
+    }
+
+    private void SpawnMap()
+    {
+        SceneManager.MoveGameObjectToScene(MainGameManager.instance.LoadWorld(), SceneManager.GetSceneByName("MainGame"));
     }
 }
+
+public enum GameResult
+{
+    PLAYER_WIN,
+    ENEMY_WIN
+}
+
+
+

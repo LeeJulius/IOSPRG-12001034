@@ -13,7 +13,7 @@ public class GunComponent : MonoBehaviour
 
     [Header("Gun Properties")]
     [SerializeField] private WeaponTypes weaponType;
-    [SerializeField] private int dmg;
+    [SerializeField] protected int dmg;
 
     [Header("Reloading Property")]
     [SerializeField] private float reloadSpeed;
@@ -22,6 +22,8 @@ public class GunComponent : MonoBehaviour
     [Header("Autonmatic Property")]
     [SerializeField] private bool isAutomatic;
     [SerializeField] protected float fireRate;
+
+    [SerializeField] private GameObject bulletSpawnLocation;
 
     public virtual IEnumerator Shoot(Transform bulletRotation) { yield return null; }
 
@@ -46,4 +48,6 @@ public class GunComponent : MonoBehaviour
     public WeaponTypes WeaponType { get { return weaponType; } }
     public bool IsAutomatic { get { return isAutomatic; } }
     public float FireRate { get { return fireRate; } }
+
+    public Transform BulletSpawnLocation { get { return bulletSpawnLocation.transform; } } 
 }

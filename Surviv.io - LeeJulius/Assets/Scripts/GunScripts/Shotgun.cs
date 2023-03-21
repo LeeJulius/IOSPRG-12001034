@@ -9,15 +9,17 @@ public class Shotgun : GunComponent
     [SerializeField] private int minSpreadShot;
     [SerializeField] private int maxSpreadShot;
 
-    public override IEnumerator Shoot(Transform bulletRotation)
+    public override IEnumerator Shoot(Transform bulletSpawnLocation)
     {
         if (currentClip <= 0)
-            yield return null;
+            yield break;
 
         for (int i = 0; i < shotgunBullets; i++)
         {
-            bulletRotation.transform.eulerAngles += new Vector3(0, 0, SpreadBullets(minSpreadShot, maxSpreadShot));
-            Instantiate(BulletPrefab, bulletRotation.transform.position, bulletRotation.transform.rotation);
+            bulletSpawnLocation.transform.eulerAngles += new Vector3(0, 0, SpreadBullets(minSpreadShot, maxSpreadShot));
+            GameObject Bullet = Instantiate(BulletPrefab, bulletSpawnLocation.transform.position, bulletSpawnLocation.transform.rotation);
+            Bullet.transform.parent = MainGameManager.instance.BulletsLocation.transform;
+            Bullet.GetComponent<Bullet>().Init(dmg);
         }
 
         currentClip -= 1;

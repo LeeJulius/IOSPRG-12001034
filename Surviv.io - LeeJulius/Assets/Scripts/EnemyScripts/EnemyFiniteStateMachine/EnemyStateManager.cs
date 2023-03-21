@@ -11,12 +11,16 @@ public class EnemyStateManager : MonoBehaviour
     private EnemyReloadPhase enemyReloadPhase = new EnemyReloadPhase();
 
     [SerializeField] private int changeDirectionInterval;
-    [SerializeField] private int shootingInterval;
+    [SerializeField] private int shootingIntervalMin;
+    [SerializeField] private int shootingIntervalMax;
 
     private void Start()
     {
         currentState = enemyPatrolState;
         currentState.EnterState(this);
+
+        if (shootingIntervalMin > shootingIntervalMax)
+            shootingIntervalMin = shootingIntervalMax;
     }
 
     private void Update()
@@ -47,6 +51,8 @@ public class EnemyStateManager : MonoBehaviour
     }
 
     public int ChangeDirectionInterval { get { return changeDirectionInterval; } }
+    public int ShootingIntervalMin { get { return shootingIntervalMin; } }
+    public int ShootingIntervalMax { get { return shootingIntervalMax; } }
 }
 
 public enum EnemyStates

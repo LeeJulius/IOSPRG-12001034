@@ -8,8 +8,7 @@ public class EnemyShootPhase : EnemyBaseState
     {
         EnemyController enemyController = enemy.GetComponent<EnemyController>();
 
-        if (enemyController.GetComponent<EnemyController>().Targets.Count <= 0)
-            return;
+        enemy.StartCoroutine(ShootGun(enemyController.EquippedGun, enemy));
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
@@ -18,12 +17,16 @@ public class EnemyShootPhase : EnemyBaseState
 
         EnemyController enemyController = enemy.GetComponent<EnemyController>();
         float enemyRotation = GetRotation(enemyController.Targets[0], enemy.gameObject);
-        enemyController.EnemyWeaponLocation.transform.eulerAngles = new Vector3(0, 0, enemyRotation);
+        enemyController.WeaponLocation.transform.eulerAngles = new Vector3(0, 0, enemyRotation);
+
+        GameObject equippedGun = enemyController.EquippedGun;
+        GunComponent gunComponent = equippedGun.GetComponent<GunComponent>();
+        gunComponent.BulletSpawnLocation.transform.eulerAngles = new Vector3(0, 0, enemyRotation);
     }
 
     public override void ExitState(EnemyStateManager enemy)
     {
-
+        enemy.StopCoroutine(ShootGun(enemy.gameObject.GetComponent<EnemyController>().EquippedGun, enemy));
     }
 
     private float GetRotation(GameObject Target, GameObject Self)
@@ -32,11 +35,32 @@ public class EnemyShootPhase : EnemyBaseState
         float verticalChange = Target.transform.position.y - Self.transform.position.y;
         float horizontalChange = Target.transform.position.x - Self.transform.position.x;
 
-        // if no change return nothing (stationary)
-        if (horizontalChange == 0 && verticalChange == 0)
-            return float.NaN;
-
         // Getting angle using trigonemtry (T-O-A)
         return Mathf.Atan2(verticalChange, horizontalChange) * Mathf.Rad2Deg;
+    }
+
+    private IEnumerator ShootGun(GameObject _equippedGun, EnemyStateManager enemy)
+    {
+        GunComponent gunComponent = _equippedGun.GetComponent<GunComponent>();
+
+        if (gunComponent.CurrentClip <= 0)
+        {
+            enemy.SwitchState(EnemyStates.RELOAD);
+        }
+
+        yield return new WaitForSecondsRealtime(Random.Range(enemy.ShootingIntervalMin, enemy.ShootingIntervalMax));
+
+        yield return enemy.StartCoroutine(gunComponent.Shoot(gunComponent.BulletSpawnLocation));
+
+        yield return new WaitForSecondsRealtime(gunComponent.FireRate);
+
+        if (enemy.GetComponent<EnemyController>().Targets.Count <= 0)
+        {
+            enemy.SwitchState(EnemyStates.PATROL);
+        }
+        else
+        {
+            enemy.StartCoroutine(ShootGun(_equippedGun, enemy));
+        }
     }
 }

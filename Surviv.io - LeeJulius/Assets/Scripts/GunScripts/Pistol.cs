@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Pistol : GunComponent
 {
-    public override IEnumerator Shoot(Transform bulletRotation)
+    public override IEnumerator Shoot(Transform bulletSpawnLocation)
     {
         if (currentClip <= 0)
-            yield return null;
+            yield break;
 
-        Instantiate(BulletPrefab, bulletRotation.transform.position, bulletRotation.transform.rotation);
+        GameObject Bullet = Instantiate(BulletPrefab, bulletSpawnLocation.transform.position, bulletSpawnLocation.transform.rotation);
+        Bullet.transform.parent = MainGameManager.instance.BulletsLocation.transform;
+
+        Bullet.GetComponent<Bullet>().Init(dmg);
 
         currentClip -= 1;
 

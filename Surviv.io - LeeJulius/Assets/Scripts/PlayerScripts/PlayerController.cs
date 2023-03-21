@@ -2,20 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : UnitController
 {
     [Header("Player Speed")]
     [SerializeField] private Joystick movementJoystick;
-    [SerializeField] private float speed;
 
     [Header("Player Rotation")]
     [SerializeField] private Joystick rotationJoystick;
 
-    [Header("RigidBody")]
-    private Rigidbody2D rb;
-
     [Header("Player Weapons")]
-    [SerializeField] private GameObject weaponSpawnLocation;
     [SerializeField] private GameObject playerFists;
 
     [Header("PlayerInventory")]
@@ -25,12 +20,12 @@ public class PlayerController : MonoBehaviour
     [Header("Player Shoot")]
     private bool shootButtonPressed;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         playerInventoryPanelManager = this.GetComponent<PlayerInventoryPanelManager>();
         playerInventory = this.GetComponent<PlayerInventory>();
-
-        rb = this.GetComponent<Rigidbody2D>();
 
         shootButtonPressed = false;
     }
@@ -39,11 +34,14 @@ public class PlayerController : MonoBehaviour
     {
         // Changing Player (Position)
         if (movementJoystick.GetComponent<Joystick>().JoyStickTouched)
-            rb.position += movementJoystick.GetDirection() * speed * Time.deltaTime;
+            this.GetComponent<Rigidbody2D>().position += movementJoystick.GetDirection() * speed * Time.deltaTime;
 
         // Changing Aim (Rotating)
         if (!float.IsNaN(rotationJoystick.GetRotation()) && rotationJoystick.GetComponent<Joystick>().JoyStickTouched)
-            weaponSpawnLocation.transform.eulerAngles = new Vector3(0, 0, rotationJoystick.GetRotation());
+        {
+            weaponLocation.transform.eulerAngles = new Vector3(0, 0, rotationJoystick.GetRotation());
+            CurrentGunProperties().BulletSpawnLocation.transform.eulerAngles = new Vector3(0, 0, rotationJoystick.GetRotation());
+        }   
     }
 
     #region Shooting Functions
@@ -62,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PlayerShootGun()
     {
-        yield return StartCoroutine(CurrentGunProperties().Shoot(weaponSpawnLocation.transform));
+        yield return StartCoroutine(CurrentGunProperties().Shoot(CurrentGunProperties().BulletSpawnLocation));
         playerInventoryPanelManager.UpdatePanelInformation();
 
         yield return new WaitForSecondsRealtime(CurrentGunProperties().FireRate);
@@ -102,6 +100,12 @@ public class PlayerController : MonoBehaviour
         int currentInventorySlot = playerInventoryPanelManager.GetCurrentInventorySlot();
         GameObject currentGun = playerInventory.GetCurrentItem(currentInventorySlot);
         return currentGun.GetComponent<GunComponent>();
+    }
+
+    protected override void Death()
+    {
+        GameManager.instance.EndGame(GameResult.ENEMY_WIN);
+        Destroy(this.gameObject);
     }
 
     public GameObject PlayerFists { get { return playerFists; } }
