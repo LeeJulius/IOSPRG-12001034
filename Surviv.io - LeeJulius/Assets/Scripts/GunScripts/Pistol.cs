@@ -12,7 +12,7 @@ public class Pistol : GunComponent
         GameObject Bullet = Instantiate(BulletPrefab, bulletSpawnLocation.transform.position, bulletSpawnLocation.transform.rotation);
         Bullet.transform.parent = MainGameManager.instance.BulletsLocation.transform;
 
-        Bullet.GetComponent<Bullet>().Init(dmg);
+        Bullet.GetComponent<Projectiles>().Init(dmg);
 
         currentClip -= 1;
 

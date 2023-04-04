@@ -25,6 +25,11 @@ public class GunComponent : MonoBehaviour
 
     [SerializeField] private GameObject bulletSpawnLocation;
 
+    public void Init()
+    {
+        currentClip = maxClip;
+    }
+
     public virtual IEnumerator Shoot(Transform bulletRotation) { yield return null; }
 
     protected float SpreadBullets(int minSpead, int maxSpread) {

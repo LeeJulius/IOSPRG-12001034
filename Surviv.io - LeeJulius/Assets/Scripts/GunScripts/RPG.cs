@@ -2,21 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SMG : GunComponent
+public class RPG : GunComponent
 {
-    [SerializeField] private int minSpreadShot;
-    [SerializeField] private int maxSpreadShot;
-
     public override IEnumerator Shoot(Transform bulletSpawnLocation)
     {
         if (currentClip <= 0)
             yield break;
 
-        bulletSpawnLocation.transform.eulerAngles += new Vector3(0, 0, SpreadBullets(minSpreadShot, maxSpreadShot));
         GameObject Bullet = Instantiate(BulletPrefab, bulletSpawnLocation.transform.position, bulletSpawnLocation.transform.rotation);
         Bullet.transform.parent = MainGameManager.instance.BulletsLocation.transform;
 
-        Bullet.GetComponent<Projectiles>().Init(dmg);
+        Bullet.GetComponentInChildren<Projectiles>().Init(dmg);
 
         currentClip -= 1;
 

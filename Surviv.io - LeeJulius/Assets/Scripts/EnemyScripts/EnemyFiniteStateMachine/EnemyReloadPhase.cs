@@ -10,7 +10,7 @@ public class EnemyReloadPhase : EnemyBaseState
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
-        Debug.Log("Enemy Reloading");
+
     }
     public override void ExitState(EnemyStateManager enemy)
     {

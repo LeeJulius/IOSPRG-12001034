@@ -12,7 +12,6 @@ public class EnemyShootPhase : EnemyBaseState
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
-        Debug.Log("Enemy Shooting");
         enemy.GetComponent<Rigidbody2D>().position += enemy.GetComponent<EnemyController>().Direction * enemy.GetComponent<EnemyController>().Speed / 2 * Time.deltaTime;
 
         EnemyController enemyController = enemy.GetComponent<EnemyController>();

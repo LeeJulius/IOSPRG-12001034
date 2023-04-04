@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 1539923600}
   - component: {fileID: 1539923599}
   - component: {fileID: 1539923598}
+  - component: {fileID: 1539923601}
   m_Layer: 0
   m_Name: ~MainGameManager
   m_TagString: Untagged
@@ -236,11 +237,12 @@ MonoBehaviour:
     - {fileID: 2888627881746320037, guid: a4efff4cf795cde4f86a2050b387f470, type: 3}
     - {fileID: 1255177729466818769, guid: 195b3f2c55038b146a689550114f6fc6, type: 3}
     - {fileID: 7756408220398978867, guid: 0a38ed845829f384f9e9b5492ade881d, type: 3}
-    hp: 0
-    speed: 0
-    changeDirectionInterval: 0
-    shootingIntervalMin: 0
-    shootingIntervalMax: 0
+  - enemySpawnInformation:
+      objectPrefab: {fileID: 2384200753806806940, guid: 5546dbba8441d874ea155bc87061e6b8, type: 3}
+      minSpawnAmount: 1
+      maxSpawnAmount: 1
+    enemyGuns:
+    - {fileID: 98991735262220665, guid: 85e5b51d08ebc3a48ae1a3d62533b2d0, type: 3}
 --- !u!114 &1539923598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +310,33 @@ MonoBehaviour:
       objectPrefab: {fileID: 4093460031977897841, guid: c9a445421fe93ca44a8760047088d032, type: 3}
       minSpawnAmount: 3
       maxSpawnAmount: 5
+--- !u!114 &1539923601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539923594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ceae318c6c105a4e8159a8ee5a7a3eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crateSpawnData:
+  - crateSpawnInformation:
+      objectPrefab: {fileID: 6011740587315055395, guid: 61d76122e0edb1744b34040333634de1, type: 3}
+      minSpawnAmount: 4
+      maxSpawnAmount: 10
+    hp: 3
+    chanceToSpawnGun: 70
+    guns:
+    - {fileID: 6404961936077896779, guid: 0f64f2fecbec6934ea05844a76be4db9, type: 3}
+    - {fileID: 1262969698032508714, guid: 4129bd1cf672f9e4d9b1b968b9bde069, type: 3}
+    - {fileID: 4449881470363932981, guid: 1d5cc716f1d256040aeee1f1d2602b22, type: 3}
+    ammo:
+    - {fileID: 5198545882983145412, guid: 669692d346e78434bbbcac2f6c00ccd8, type: 3}
+    - {fileID: 929058298305355563, guid: 7e908461e9f33054f80e22116d822f84, type: 3}
+    - {fileID: 4093460031977897841, guid: c9a445421fe93ca44a8760047088d032, type: 3}
 --- !u!1 &1821940223
 GameObject:
   m_ObjectHideFlags: 0

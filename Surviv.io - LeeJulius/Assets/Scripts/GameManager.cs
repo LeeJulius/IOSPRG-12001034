@@ -20,7 +20,6 @@ public class GameManager : Singleton<GameManager>
 
         if (OnCallBack != null)
         {
-            Debug.Log("Scene Loaded");
             OnCallBack.Invoke();
         }
     }

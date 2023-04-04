@@ -10,7 +10,6 @@ public class EnemyPatrolState : EnemyBaseState
     }
     public override void UpdateState(EnemyStateManager enemy)
     {
-        Debug.Log("Enemy Patrolling");
         enemy.GetComponent<Rigidbody2D>().position += enemy.GetComponent<EnemyController>().Direction * enemy.GetComponent<EnemyController>().Speed * Time.deltaTime;
     }
     public override void ExitState(EnemyStateManager enemy)

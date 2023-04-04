@@ -11,7 +11,6 @@ public class SpawnerManager : Singleton<SpawnerManager>
         spawnerList.Add(currentSpawner);
     }
 
-
     public void SpawnAll()
     {
         foreach (BaseSpawner currentSpawner in spawnerList)

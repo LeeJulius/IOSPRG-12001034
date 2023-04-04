@@ -15,8 +15,6 @@ public class EnemySpawner : BaseSpawner
     {
         base.Spawn();
 
-        Debug.Log(enemySpawnerData.Length);
-
         for (int i = 0; i < enemySpawnerData.Length; i++)
         {
             SpawnEnemy(i);

@@ -19,7 +19,7 @@ public class EnemyController : UnitController
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.name.StartsWith("Player") || collision.name.StartsWith("Enemy"))
+        if (collision.name.StartsWith("Player") || collision.name.StartsWith("Enemy") || collision.name.StartsWith("Boss"))
         {
             targets.Add(collision.gameObject);
             enemyStateManager.SwitchState(EnemyStates.SHOOT);
@@ -28,7 +28,7 @@ public class EnemyController : UnitController
 
     public void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.name.StartsWith("Player") || collision.name.StartsWith("Enemy"))
+        if (collision.name.StartsWith("Player") || collision.name.StartsWith("Enemy") || collision.name.StartsWith("Boss"))
         {
             targets.Remove(collision.gameObject);
 

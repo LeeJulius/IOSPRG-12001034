@@ -20,13 +20,9 @@ public class PlayerInventoryPanelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ShotgunAmmoText;
     [SerializeField] private TextMeshProUGUI RPGAmmoText;
 
-    // Ask sir cuz this is so hard coded lmao (answer can be struct)
+
     [Header("Inventory Type")]
-    [SerializeField] private InventorySlotTypes[] inventroySlotType = new InventorySlotTypes[2]
-        {
-            InventorySlotTypes.PRIMARY,
-            InventorySlotTypes.SECONDARY
-        };
+    [SerializeField] private InventorySlotTypes[] inventroySlotType;
 
     [Header("Other Components")]
     private PlayerInventory playerInventory;
@@ -103,7 +99,6 @@ public class PlayerInventoryPanelManager : MonoBehaviour
 
         int currentClipAmmo = currentGun.CurrentClip;
         int gunAmmo = playerInventory.GetCurrentAmmo(currentWeaponType);
-        
 
         currentPanel.UpdatePanel(currentWeaponType, currentClipAmmo, gunAmmo);
 

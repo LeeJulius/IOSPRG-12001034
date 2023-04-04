@@ -26,6 +26,7 @@ public class PlayerInventory : MonoBehaviour
     public void EquipWeapon(GameObject gunToEquip, int inventorySlot)
     {
         GameObject CurrentGun = Instantiate(gunToEquip, WeaponSpawnLocation.transform);
+        CurrentGun.GetComponent<GunComponent>().Init();
         CurrentGun.transform.parent = WeaponSpawnLocation.transform;
 
         if (Weapons.Count <= inventorySlot)
